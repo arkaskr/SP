@@ -1,0 +1,151 @@
+'use server';
+
+import { errorResponse, successResponse } from "@/lib/utils/api-responses";
+import { db } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { UserUpdateValidationSchema } from "@/lib/utils/model-validation-schema";
+import { auth } from "@/auth";
+
+export const GET = async (req: NextRequest) => {
+    try {
+        const session = await auth();
+
+        if (!session) {
+            return errorResponse("Not authenticated", 401);
+        }
+       
+        const id = session.user.id;
+
+        const user = await db.user.findUnique({
+            where: {
+                id: id
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                ph_no: true,
+                createdAt: true,
+                updatedAt: true,
+            }
+        });
+
+        if(!user){
+            return errorResponse("No user found", 404);
+        }
+
+        return successResponse(user, "User fetched successfully", 200);
+
+    } catch (error) {
+        console.error("GET user error:", error);
+        return errorResponse("Internal Server Error", 500, error);
+    }
+};
+
+export const PATCH = async (req: NextRequest) => {
+    try {
+        const session = await auth();
+
+        if (!session) {
+            return errorResponse("Not authenticated", 401);
+        }
+       
+        const id = session.user.id;
+
+        // Check if user exists
+        const existingUser = await db.user.findUnique({
+            where: {
+                id: id
+            }
+        });
+
+        if(!existingUser){
+            return errorResponse("No user found", 404);
+        }
+
+        const body = await req.json();
+        console.log("PATCH request body:", body);
+
+        // Validate the input
+        const validation = UserUpdateValidationSchema.safeParse(body);
+        if(!validation.success){
+            console.log("Validation error details:", validation.error.errors);
+            return errorResponse("Invalid Input", 400, validation.error);
+        }
+
+        const { name, email, image, ph_no } = validation.data;
+
+        // Check if email is already taken by another user
+        if (email && email !== existingUser.email) {
+            const emailExists = await db.user.findFirst({
+                where: {
+                    email: email,
+                    id: { not: id }
+                }
+            });
+
+            if (emailExists) {
+                return errorResponse("Email already in use", 400);
+            }
+        }
+
+        // Prepare update data - only update fields that are provided
+        const updateData: any = {};
+        
+        if (name !== undefined) updateData.name = name;
+        if (email !== undefined) updateData.email = email;
+        if (image !== undefined) updateData.image = image;
+        if (ph_no !== undefined) updateData.ph_no = ph_no;
+
+        // Only update if there's something to update
+        if (Object.keys(updateData).length === 0) {
+            return successResponse(existingUser, "No changes to update", 200);
+        }
+
+        const updatedUser = await db.user.update({
+            where: {
+                id: id
+            },
+            data: updateData,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                ph_no: true,
+                createdAt: true,
+                updatedAt: true,
+            }
+        });
+
+        console.log("Updated user:", updatedUser);
+        return successResponse(updatedUser, "User updated successfully", 200);
+
+    } catch (error: any) {
+        console.error("PATCH user error:", error);
+        
+        // Handle Prisma unique constraint violation
+        if (error.code === 'P2002') {
+            return errorResponse("Email already in use", 400);
+        }
+        
+        return errorResponse("Internal Server Error", 500, error.message || error);
+    }
+};
+
+export const DELETE = async (req: NextRequest) => {
+    try {
+        const session = await auth();
+
+        if (!session) {
+            return errorResponse("Not authenticated", 401);
+        }
+        
+        return errorResponse("User delete by self not implemented", 501);
+
+    } catch (error) {
+        console.error("DELETE user error:", error);
+        return errorResponse("Internal Server Error", 500, error);
+    }
+};

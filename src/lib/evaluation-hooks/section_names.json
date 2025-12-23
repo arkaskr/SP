@@ -1,0 +1,16 @@
+{
+    "wbjee" : [
+       {
+        "name" : "WBJEE_SECTION_SINGLE_CHOICE_MCQ_TYPE_1",
+        "instruction" : "Carries 1 mark each and only one option is correct.In case of incorrect answer or any combination of more than one answer , 1/4 mark will be deducted."
+       },
+       {
+        "name" : "WBJEE_SECTION_SINGLE_CHOICE_MCQ_TYPE_2",
+        "instruction" : "Each question carries 2 marks.Only one option is correct.In case of an incorrect answer or if more than one option is selected, 1 mark will be deducted."
+       },
+       {
+        "name" : "WBJEE_SECTION_MULTI_CHOICE_MCQ",
+        "instruction" : "Each question carries 2 marks.One or more options can be correct.If all correct answers are marked and no incorrect answers are marked, the score is calculated as:Score=2×(number of correct answers marked)/(actual number of correct answers). If any wrong option is marked or if a combination including a wrong option is marked, the answer is considered wrong, but there is no negative marking. In such cases, zero marks are awarded."
+       }
+    ]
+}

@@ -1,0 +1,308 @@
+-- CreateEnum
+CREATE TYPE "RoleType" AS ENUM ('ADMIN', 'USER');
+
+-- CreateEnum
+CREATE TYPE "ExamType" AS ENUM ('PYQ', 'MOCK', 'PRACTICE', 'QUIZ', 'BRAINSTROM');
+
+-- CreateEnum
+CREATE TYPE "DifficultyLevel" AS ENUM ('EASY', 'MEDIUM', 'HARD');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "ph_no" TEXT NOT NULL,
+    "name" TEXT,
+    "email" TEXT,
+    "emailVerified" TIMESTAMP(3),
+    "image" TEXT,
+    "password" TEXT,
+    "role" "RoleType" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Account" (
+    "userId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "provider" TEXT NOT NULL,
+    "providerAccountId" TEXT NOT NULL,
+    "refresh_token" TEXT,
+    "access_token" TEXT,
+    "expires_at" INTEGER,
+    "token_type" TEXT,
+    "scope" TEXT,
+    "id_token" TEXT,
+    "session_state" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("provider","providerAccountId")
+);
+
+-- CreateTable
+CREATE TABLE "Session" (
+    "sessionToken" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "VerificationToken" (
+    "identifier" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "VerificationToken_pkey" PRIMARY KEY ("identifier","token")
+);
+
+-- CreateTable
+CREATE TABLE "OTP" (
+    "id" TEXT NOT NULL,
+    "ph_no" TEXT NOT NULL,
+    "otp" TEXT NOT NULL,
+    "expires" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "OTP_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Subject" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+
+    CONSTRAINT "Subject_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Chapter" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "subject_id" TEXT NOT NULL,
+
+    CONSTRAINT "Chapter_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExamCategory" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "eligibility" TEXT,
+    "cutoffs" TEXT,
+    "exam_pattern" TEXT,
+
+    CONSTRAINT "ExamCategory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SubjectToExamCategory" (
+    "id" TEXT NOT NULL,
+    "subjectId" TEXT NOT NULL,
+    "examCategoryId" TEXT NOT NULL,
+
+    CONSTRAINT "SubjectToExamCategory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SectionConfig" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "description" TEXT,
+    "full_marks" DOUBLE PRECISION NOT NULL,
+    "negative_marks" DOUBLE PRECISION NOT NULL,
+    "zero_marks" DOUBLE PRECISION,
+    "partial_marks" DOUBLE PRECISION[],
+    "examCategoryId" TEXT NOT NULL,
+
+    CONSTRAINT "SectionConfig_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Exam" (
+    "id" TEXT NOT NULL,
+    "title" TEXT,
+    "instructions" TEXT,
+    "description" TEXT,
+    "total_duration_in_seconds" INTEGER,
+    "total_questions" INTEGER NOT NULL DEFAULT 0,
+    "total_marks" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "examType" "ExamType" NOT NULL,
+    "exam_category_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Exam_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ChapterToExam" (
+    "id" TEXT NOT NULL,
+    "chapterId" TEXT NOT NULL,
+    "examId" TEXT NOT NULL,
+
+    CONSTRAINT "ChapterToExam_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExamSection" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "description" TEXT,
+    "isAllQuestionsMandatory" BOOLEAN DEFAULT true,
+    "number_of_questions_to_attempt" INTEGER,
+    "section_config_id" TEXT NOT NULL,
+    "exam_id" TEXT NOT NULL,
+    "subjectId" TEXT,
+
+    CONSTRAINT "ExamSection_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Question" (
+    "id" TEXT NOT NULL,
+    "text" TEXT,
+    "image_url" TEXT,
+    "difficulty_level" "DifficultyLevel" NOT NULL,
+    "exam_section_id" TEXT,
+    "chapter_id" TEXT NOT NULL,
+
+    CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Option" (
+    "id" TEXT NOT NULL,
+    "text" TEXT,
+    "image_url" TEXT,
+    "is_correct" BOOLEAN NOT NULL,
+    "question_id" TEXT NOT NULL,
+
+    CONSTRAINT "Option_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AnswerExplanationField" (
+    "id" TEXT NOT NULL,
+    "text" TEXT,
+    "value" TEXT,
+    "explanation" TEXT,
+    "question_id" TEXT NOT NULL,
+
+    CONSTRAINT "AnswerExplanationField_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserSelectedOption" (
+    "id" TEXT NOT NULL,
+    "option_id" TEXT NOT NULL,
+    "user_answer_per_question_id" TEXT NOT NULL,
+
+    CONSTRAINT "UserSelectedOption_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserAnswerPerQuestion" (
+    "id" TEXT NOT NULL,
+    "value" TEXT,
+    "is_attempted" BOOLEAN NOT NULL,
+    "user_submission_id" TEXT NOT NULL,
+    "question_id" TEXT NOT NULL,
+
+    CONSTRAINT "UserAnswerPerQuestion_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserSubmission" (
+    "id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "exam_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "UserSubmission_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_ph_no_key" ON "User"("ph_no");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "OTP_ph_no_key" ON "OTP"("ph_no");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "AnswerExplanationField_question_id_key" ON "AnswerExplanationField"("question_id");
+
+-- AddForeignKey
+ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Chapter" ADD CONSTRAINT "Chapter_subject_id_fkey" FOREIGN KEY ("subject_id") REFERENCES "Subject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SubjectToExamCategory" ADD CONSTRAINT "SubjectToExamCategory_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SubjectToExamCategory" ADD CONSTRAINT "SubjectToExamCategory_examCategoryId_fkey" FOREIGN KEY ("examCategoryId") REFERENCES "ExamCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "SectionConfig" ADD CONSTRAINT "SectionConfig_examCategoryId_fkey" FOREIGN KEY ("examCategoryId") REFERENCES "ExamCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Exam" ADD CONSTRAINT "Exam_exam_category_id_fkey" FOREIGN KEY ("exam_category_id") REFERENCES "ExamCategory"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ChapterToExam" ADD CONSTRAINT "ChapterToExam_chapterId_fkey" FOREIGN KEY ("chapterId") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ChapterToExam" ADD CONSTRAINT "ChapterToExam_examId_fkey" FOREIGN KEY ("examId") REFERENCES "Exam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamSection" ADD CONSTRAINT "ExamSection_section_config_id_fkey" FOREIGN KEY ("section_config_id") REFERENCES "SectionConfig"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamSection" ADD CONSTRAINT "ExamSection_exam_id_fkey" FOREIGN KEY ("exam_id") REFERENCES "Exam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamSection" ADD CONSTRAINT "ExamSection_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Question" ADD CONSTRAINT "Question_exam_section_id_fkey" FOREIGN KEY ("exam_section_id") REFERENCES "ExamSection"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Question" ADD CONSTRAINT "Question_chapter_id_fkey" FOREIGN KEY ("chapter_id") REFERENCES "Chapter"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Option" ADD CONSTRAINT "Option_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "AnswerExplanationField" ADD CONSTRAINT "AnswerExplanationField_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSelectedOption" ADD CONSTRAINT "UserSelectedOption_option_id_fkey" FOREIGN KEY ("option_id") REFERENCES "Option"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSelectedOption" ADD CONSTRAINT "UserSelectedOption_user_answer_per_question_id_fkey" FOREIGN KEY ("user_answer_per_question_id") REFERENCES "UserAnswerPerQuestion"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserAnswerPerQuestion" ADD CONSTRAINT "UserAnswerPerQuestion_user_submission_id_fkey" FOREIGN KEY ("user_submission_id") REFERENCES "UserSubmission"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserAnswerPerQuestion" ADD CONSTRAINT "UserAnswerPerQuestion_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSubmission" ADD CONSTRAINT "UserSubmission_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "UserSubmission" ADD CONSTRAINT "UserSubmission_exam_id_fkey" FOREIGN KEY ("exam_id") REFERENCES "Exam"("id") ON DELETE CASCADE ON UPDATE CASCADE;

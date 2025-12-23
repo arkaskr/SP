@@ -1,0 +1,393 @@
+{
+    "wbjee": {
+        "tests": {
+            "practice": {
+                "subjects": [
+                    {
+                        "name": "Mathematics",
+                        "chapters": [
+                            "Algebra",
+                            "Logarithms",
+                            "Complex Numbers",
+                            "Polynomial Equations",
+                            "Permutation and Combination",
+                            "Principle of Mathematical Induction",
+                            "Binomial Theorem",
+                            "Matrices",
+                            "Sets, Relations, and Mappings",
+                            "Statistics and Probability",
+                            "Trigonometry",
+                            "Coordinate Geometry of Two Dimensions",
+                            "Coordinate Geometry of Three Dimensions",
+                            "Differential Calculus",
+                            "Integral Calculus",
+                            "Differential Equations",
+                            "Application of Calculus",
+                            "Vectors"
+                        ]
+                    },
+                    {
+                        "name": "Physics",
+                        "chapters": [
+                            "Physical World, Measurements, Units & Dimensions",
+                            "Kinematics",
+                            "Laws of Motion",
+                            "Motion of Centre of Mass, Connected Systems, Friction",
+                            "Gravitation",
+                            "Bulk Properties of Matter",
+                            "Viscosity",
+                            "Thermodynamics",
+                            "Kinetic Theory of Gases",
+                            "Oscillations & Waves",
+                            "Electrostatics",
+                            "Current Electricity",
+                            "Magnetic Effect of Current",
+                            "Magnetics",
+                            "Electromagnetic Induction & Alternating Current",
+                            "Electromagnetic Waves",
+                            "Optics I (Ray Optics)",
+                            "Optics II (Wave Optics)",
+                            "Particle Nature of Light & Wave-Particle Dualism",
+                            "Atomic Physics",
+                            "Nuclear Physics",
+                            "Solid State Electronics"
+                        ]
+                    },
+                    {
+                        "name": "Chemistry",
+                        "chapters": [
+                            "Atoms, Molecules and Chemical Arithmetic",
+                            "Atomic Structure",
+                            "Radioactivity and Nuclear Chemistry",
+                            "The Periodic Table and Chemical Families",
+                            "Chemical Bonding and Molecular Structure",
+                            "Coordination Compounds",
+                            "Solid State",
+                            "Liquid State",
+                            "Gaseous State",
+                            "Chemical Energetics and Chemical Dynamics",
+                            "Physical Chemistry of Solutions",
+                            "Ionic and Redox Equilibria",
+                            "Hydrogen",
+                            "Chemistry of Non-Metallic Elements and their Compounds",
+                            "Chemistry of Metals",
+                            "Chemistry in Industry",
+                            "Polymers",
+                            "Surface Chemistry",
+                            "Environmental Chemistry",
+                            "Chemistry of Carbon Compounds",
+                            "Compounds",
+                            "Haloalkanes and Haloarenes",
+                            "Alcohol",
+                            "Aromatic Compounds",
+                            "Application Oriented Chemistry",
+                            "Introduction to Bio-Molecules",
+                            "Principles of Qualitative Analysis"
+                        ]
+                    }
+                ]
+            },
+            "mock": {
+                "subjects": [
+                    {
+                        "name": "Full Length",
+                        "chapters": [
+                            "Test 1",
+                            "Test 2",
+                            "Test 3"
+                        ]
+                    },
+                    {
+                        "name": "Subject Wise",
+                        "chapters": [
+                            "Physics",
+                            "Chemistry",
+                            "Math"
+                        ]
+                    },
+                    {
+                        "name": "Chapter Wise",
+                        "chapters": [
+                            "Important",
+                            "Medium",
+                            "Basic"
+                        ]
+                    }
+                ]
+            }
+        },
+        "details": {
+            "name": "WBJEE",
+            "eligibility": [
+                "Candidates must have passed the 10+2 exam with Physics, Mathematics, and Chemistry/Biology/Biotechnology/Computer Science.",
+                "Minimum 45% aggregate marks (40% for reserved categories).",
+                "Candidates must be Indian citizens and at least 17 years old."
+            ],
+            "relatedExams": [
+                "JEE Main",
+                "BITSAT",
+                "COMEDK UGET"
+            ]
+        }
+    },
+    "jee": {
+        "tests": {
+            "practice": {
+                "subjects": [
+                    {
+                        "name": "Mathematics",
+                        "chapters": [
+                            "Algebra",
+                            "Logarithms",
+                            "Complex Numbers",
+                            "Polynomial Equations",
+                            "Permutation and Combination",
+                            "Principle of Mathematical Induction",
+                            "Binomial Theorem",
+                            "Matrices",
+                            "Sets, Relations, and Mappings",
+                            "Statistics and Probability",
+                            "Trigonometry",
+                            "Coordinate Geometry of Two Dimensions",
+                            "Coordinate Geometry of Three Dimensions",
+                            "Differential Calculus",
+                            "Integral Calculus",
+                            "Differential Equations",
+                            "Application of Calculus",
+                            "Vectors"
+                        ]
+                    },
+                    {
+                        "name": "Physics",
+                        "chapters": [
+                            "Physical World, Measurements, Units & Dimensions",
+                            "Kinematics",
+                            "Laws of Motion",
+                            "Motion of Centre of Mass, Connected Systems, Friction",
+                            "Gravitation",
+                            "Bulk Properties of Matter",
+                            "Viscosity",
+                            "Thermodynamics",
+                            "Kinetic Theory of Gases",
+                            "Oscillations & Waves",
+                            "Electrostatics",
+                            "Current Electricity",
+                            "Magnetic Effect of Current",
+                            "Magnetics",
+                            "Electromagnetic Induction & Alternating Current",
+                            "Electromagnetic Waves",
+                            "Optics I (Ray Optics)",
+                            "Optics II (Wave Optics)",
+                            "Particle Nature of Light & Wave-Particle Dualism",
+                            "Atomic Physics",
+                            "Nuclear Physics",
+                            "Solid State Electronics"
+                        ]
+                    },
+                    {
+                        "name": "Chemistry",
+                        "chapters": [
+                            "Atoms, Molecules and Chemical Arithmetic",
+                            "Atomic Structure",
+                            "Radioactivity and Nuclear Chemistry",
+                            "The Periodic Table and Chemical Families",
+                            "Chemical Bonding and Molecular Structure",
+                            "Coordination Compounds",
+                            "Solid State",
+                            "Liquid State",
+                            "Gaseous State",
+                            "Chemical Energetics and Chemical Dynamics",
+                            "Physical Chemistry of Solutions",
+                            "Ionic and Redox Equilibria",
+                            "Hydrogen",
+                            "Chemistry of Non-Metallic Elements and their Compounds",
+                            "Chemistry of Metals",
+                            "Chemistry in Industry",
+                            "Polymers",
+                            "Surface Chemistry",
+                            "Environmental Chemistry",
+                            "Chemistry of Carbon Compounds",
+                            "Compounds",
+                            "Haloalkanes and Haloarenes",
+                            "Alcohol",
+                            "Aromatic Compounds",
+                            "Application Oriented Chemistry",
+                            "Introduction to Bio-Molecules",
+                            "Principles of Qualitative Analysis"
+                        ]
+                    }
+                ]
+            },
+            "mock": {
+                "subjects": [
+                    {
+                        "name": "Full Length",
+                        "chapters": [
+                            "Test 1",
+                            "Test 2",
+                            "Test 3"
+                        ]
+                    },
+                    {
+                        "name": "Subject Wise",
+                        "chapters": [
+                            "Physics",
+                            "Chemistry",
+                            "Biology"
+                        ]
+                    },
+                    {
+                        "name": "Chapter Wise",
+                        "chapters": [
+                            "Important",
+                            "Medium",
+                            "Basic"
+                        ]
+                    }
+                ]
+            }
+        },
+        "details": {
+            "name": "JEE",
+            "eligibility": [
+                "Candidates must have passed 10+2 with Physics, Chemistry, and Mathematics.",
+                "No minimum percentage required for JEE Main; however, JEE Advanced requires 75% in 12th (65% for reserved categories).",
+                "Candidates can attempt JEE Main a maximum of 3 times in consecutive years.",
+                "For JEE Advanced, only the top 2,50,000 JEE Main qualifiers are eligible."
+            ],
+            "relatedExams": [
+                "BITSAT",
+                "VITEEE",
+                "SRMJEEE",
+                "COMEDK UGET"
+            ]
+        }
+        
+    },
+    "neet": {
+        "tests": {
+            "practice": {
+                "subjects": [
+                    {
+                        "name": "Biology",
+                        "chapters": [
+                            "Diversity of the Living World",
+                            "Structural Organisation in Animals and Plants",
+                            "Cell Structure and Function",
+                            "Plant Physiology",
+                            "Human Physiology",
+                            "Reproduction",
+                            "Genetics and Evolution",
+                            "Biology and Human Welfare",
+                            "Biotechnology and Its Applications",
+                            "Ecology and Environment"
+                        ]
+                    },
+                    {
+                        "name": "Physics",
+                        "chapters": [
+                            "Physical World and Measurement",
+                            "Kinematics",
+                            "Laws of Motion",
+                            "Work, Energy, and Power",
+                            "Motion of System of Particles and Rigid Body",
+                            "Gravitation",
+                            "Properties of Bulk Matter",
+                            "Thermodynamics",
+                            "Behaviour of Perfect Gas and Kinetic Theory",
+                            "Oscillations and Waves",
+                            "Electrostatics",
+                            "Current Electricity",
+                            "Magnetic Effects of Current and Magnetism",
+                            "Electromagnetic Induction and Alternating Currents",
+                            "Electromagnetic Waves",
+                            "Optics",
+                            "Dual Nature of Matter and Radiation",
+                            "Atoms and Nuclei",
+                            "Electronic Devices"
+                        ]
+                    },
+                    {
+                        "name": "Chemistry",
+                        "chapters": [
+                            "Some Basic Concepts of Chemistry",
+                            "Structure of Atom",
+                            "Classification of Elements and Periodicity in Properties",
+                            "Chemical Bonding and Molecular Structure",
+                            "States of Matter: Gases and Liquids",
+                            "Thermodynamics",
+                            "Equilibrium",
+                            "Redox Reactions",
+                            "Hydrogen",
+                            "The s-Block (Alkali and Alkaline earth metals)",
+                            "Some p-Block Elements",
+                            "Organic Chemistry - Some Basic Principles and Techniques",
+                            "Hydrocarbons",
+                            "Environmental Chemistry",
+                            "Solid State",
+                            "Solutions",
+                            "Electrochemistry",
+                            "Chemical Kinetics",
+                            "Surface Chemistry",
+                            "General Principles and Processes of Isolation of Elements",
+                            "The p-Block Elements",
+                            "The d- and f-Block Elements",
+                            "Coordination Compounds",
+                            "Haloalkanes and Haloarenes",
+                            "Alcohols, Phenols, and Ethers",
+                            "Aldehydes, Ketones and Carboxylic Acids",
+                            "Organic Compounds Containing Nitrogen",
+                            "Biomolecules",
+                            "Polymers",
+                            "Chemistry in Everyday Life"
+                        ]
+                    }
+                ]
+            },
+            "mock": {
+                "subjects": [
+                    {
+                        "name": "Full Length",
+                        "chapters": [
+                            "Test 1",
+                            "Test 2",
+                            "Test 3"
+                        ]
+                    },
+                    {
+                        "name": "Subject Wise",
+                        "chapters": [
+                            "Physics",
+                            "Chemistry",
+                            "Math"
+                        ]
+                    },
+                    {
+                        "name": "Chapter Wise",
+                        "chapters": [
+                            "Important",
+                            "Medium",
+                            "Basic"
+                        ]
+                    }
+                ]
+            }
+        },
+        "details": {
+            "name": "NEET",
+            "eligibility": [
+                "Candidates must have passed 10+2 with Physics, Chemistry, Biology/Biotechnology, and English.",
+                "Minimum 50% marks in PCB (40% for reserved categories).",
+                "Candidates must be at least 17 years old as of December 31st of the exam year.",
+                "No upper age limit (subject to changes by NMC).",
+                "Indian citizens, NRIs, OCIs, PIOs, and foreign nationals are eligible."
+            ],
+            "relatedExams": [
+                "AIIMS UG",
+                "JIPMER MBBS",
+                "AFMC MBBS"
+            ]
+        }
+        
+    }
+}

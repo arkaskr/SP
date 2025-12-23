@@ -1,0 +1,486 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleType {
+  USER
+  ADMIN
+  SUPERADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  ph_no         String    @unique
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+
+  role RoleType @default(USER)
+
+  accounts  Account[]
+  sessions  Session[]
+  UserSubmission UserSubmission[]
+  ExamAttempt    ExamAttempt[]
+  enrollments Enrollment[]
+
+  orders Order[]
+  subscriptions Subscription[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  startedAt DateTime @default(now())
+  endsAt    DateTime
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+// probably add subscription id also here
+ model Order {
+   id          String   @id @default(cuid())
+   userId      String
+   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+   totalAmount Float
+   createdAt   DateTime @default(now())
+   updatedAt   DateTime @updatedAt
+ }
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model OTP {
+  id      String   @id @default(cuid())
+  // ph_no   String   @unique
+  email   String   @unique
+  otp     String
+  expires DateTime
+  // user    User     @relation(fields: [ph_no], references: [ph_no], onDelete: Cascade)
+}
+
+// Optional for WebAuthn support
+// model Authenticator {
+//   credentialID         String  @unique
+//   userId               String
+//   providerAccountId    String
+//   credentialPublicKey  String
+//   counter              Int
+//   credentialDeviceType String
+//   credentialBackedUp   Boolean
+//   transports           String?
+
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   @@id([userId, credentialID])
+// }
+
+//**************************** EXAM PREP MODELS *******************************//
+
+model Subject {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  chapters    Chapter[]
+
+  examSections            ExamSection[]
+  subjectToExamCategories SubjectToExamCategory[]
+}
+
+model Chapter {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  subjectId String  @map(name: "subject_id")
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  chapterToExams ChapterToExam[]
+
+  questions Question[]
+}
+
+model ExamCategory {
+  id String @id @default(cuid())
+
+  name String
+
+  description String?
+  eligibility String?
+  cutoffs     String?
+  examPattern String? @map(name: "exam_pattern")
+
+  sectionConfigs SectionConfig[]
+
+  exams Exam[]
+
+  subjectToExamCategories SubjectToExamCategory[]
+  courseToExamCategories  CourseToExamCategory[]
+}
+
+// subject[] inside examCategory and examCategory[] inside subject
+
+model SubjectToExamCategory {
+  id String @id @default(cuid())
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  examCategoryId String
+  examCategory   ExamCategory @relation(fields: [examCategoryId], references: [id], onDelete: Cascade)
+}
+
+model SectionConfig {
+  id String @id @default(cuid())
+
+  name        String
+  description String?
+
+  fullMarks     Float   @map(name: "full_marks")
+  negativeMarks Float   @map(name: "negative_marks")
+  zeroMarks     Float?  @map(name: "zero_marks")
+  partialMarks  Float[] @map(name: "partial_marks")
+
+  examCategoryId String
+  examCategory   ExamCategory @relation(fields: [examCategoryId], references: [id], onDelete: Cascade)
+
+  examSections ExamSection[]
+}
+
+enum ExamType {
+  PYQ
+  MOCK
+  PRACTICE
+  QUIZ
+  BRAINSTORM
+}
+
+model Exam {
+  id                     String  @id @default(cuid())
+  title                  String?
+  instructions           String?
+  description            String?
+  totalDurationInSeconds Int?    @map(name: "total_duration_in_seconds")
+
+  totalQuestions Int   @default(0) @map(name: "total_questions")
+  totalMarks     Float @default(0) @map(name: "total_marks")
+
+  isDraft               Boolean  @default(false)
+
+  examType ExamType @map("exam_type")
+
+  examCategoryId String       @map(name: "exam_category_id")
+  examCategory   ExamCategory @relation(fields: [examCategoryId], references: [id], onDelete: Cascade)
+
+  chapterToExams ChapterToExam[]
+
+  examSections    ExamSection[]
+  UserSubmissions UserSubmission[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  ExamAttempt ExamAttempt[]
+
+  ExamStatistics ExamStatistics[]
+  courseExams    CourseExam[]
+}
+
+// chapter[] inside exam , exam[] inside chapter
+model ChapterToExam {
+  id String @id @default(cuid())
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  @@unique([chapterId, examId])
+}
+
+model ExamSection {
+  id          String  @id @default(cuid())
+  name        String?
+  description String?
+
+  isAllQuestionsMandatory    Boolean? @default(true)
+  numberOfQuestionsToAttempt Int?     @map(name: "number_of_questions_to_attempt")
+
+  sectionConfigId String        @map(name: "section_config_id")
+  sectionConfig   SectionConfig @relation(fields: [sectionConfigId], references: [id], onDelete: Cascade)
+
+  examId String @map(name: "exam_id")
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  subjectId String?
+  subject   Subject? @relation(fields: [subjectId], references: [id])
+
+  questions Question[]
+}
+
+enum DifficultyLevel {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Question {
+  id       String  @id @default(cuid())
+  text     String?
+  imageUrl String? @map(name: "image_url")
+
+  difficultyLevel DifficultyLevel @map(name: "difficulty_level")
+  examType      ExamType     @map(name : "exam_type")
+
+  examSectionId String?      @map(name: "exam_section_id")
+  examSection   ExamSection? @relation(fields: [examSectionId], references: [id])
+
+  chapterId String  @map(name: "chapter_id")
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  options     Option[]
+  userAnswers UserAnswerPerQuestion[]
+
+  answerExplanationField AnswerExplanationField?
+
+  QuestionStatistics QuestionStatistics[]
+}
+
+model Option {
+  id        String  @id @default(cuid())
+  text      String?
+  imageUrl  String? @map(name: "image_url")
+  isCorrect Boolean @map(name: "is_correct")
+
+  questionId String   @map(name: "question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  userSelectedOptions UserSelectedOption[]
+}
+
+model AnswerExplanationField {
+  id          String  @id @default(cuid())
+  text        String?
+  value       String?
+  explanation String?
+  imageUrl    String?
+
+  questionId String   @unique @map(name: "question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model UserSelectedOption {
+  id String @id @default(cuid())
+
+  optionId String @map(name: "option_id")
+  option   Option @relation(fields: [optionId], references: [id])
+
+  userAnswerPerQuestionId String                @map(name: "user_answer_per_question_id")
+  userAnswerPerQuestion   UserAnswerPerQuestion @relation(fields: [userAnswerPerQuestionId], references: [id], onDelete: Cascade)
+}
+
+model UserAnswerPerQuestion {
+  id    String  @id @default(cuid())
+  value String?
+
+  isAttempted Boolean @map(name: "is_attempted")
+
+  userSubmissionId String         @map(name: "user_submission_id")
+  userSubmission   UserSubmission @relation(fields: [userSubmissionId], references: [id], onDelete: Cascade)
+
+  questionId String   @map(name: "question_id")
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  chosenOptions UserSelectedOption[]
+}
+
+model UserSubmission {
+  id String @id @default(cuid())
+
+  userId String @map(name: "user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  examId String @map(name: "exam_id")
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  userAnswerPerQuestions UserAnswerPerQuestion[]
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  examAttempt ExamAttempt?
+}
+
+/**
+ * ********************************** ANALYSIS PART *****************************
+ */
+
+model ExamAttempt {
+  id                 String          @id @default(cuid())
+  userId             String
+  user               User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId             String
+  exam               Exam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  score              Float
+  percentile         Float?
+  rank               Int?
+  accuracy           Float
+  attemptedQuestions Int
+  correctAnswers     Int
+  incorrectAnswers   Int
+  timeTaken          Int
+  analysisReport     AnalysisReport?
+
+  userSubmissionId String         @unique
+  userSubmission   UserSubmission @relation(fields: [userSubmissionId], references: [id],onDelete: Cascade)
+}
+
+model AnalysisReport {
+  id                        String      @id @default(cuid())
+  examAttemptId             String      @unique
+  examAttempt               ExamAttempt @relation(fields: [examAttemptId], references: [id], onDelete: Cascade)
+  overallPerformance        Json?
+  topicWisePerformance      Json?
+  difficultyWisePerformance Json?
+  timeManagement            Json?
+  strengthsAndWeaknesses    Json?
+  suggestedImprovements     String[]
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+}
+
+model ExamStatistics {
+  id String @id @default(cuid())
+
+  examId            String @unique
+  exam              Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+  totalAttempts     Int
+  averageScore      Float
+  highestScore      Float
+  lowestScore       Float
+  medianScore       Float
+  standardDeviation Float
+  averageTimeTaken  Int
+  topPerformers     Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model QuestionStatistics {
+  id                Int      @id @default(autoincrement())
+  questionId        String   @unique
+  question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  totalAttempts     Int
+  correctAttempts   Int
+  incorrectAttempts Int
+  averageTimeTaken  Int
+  difficultyIndex   Float
+}
+
+/**
+ * ************************** COURSE *********************************
+ */
+model Course {
+  id           String      @id @default(cuid())
+  title        String
+  subtitle     String
+  thumbnailUrl String
+  description  String?
+  price        Float
+  discount     Float
+  level        CourseLevel
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courseCategories CourseToExamCategory[]
+  courseExams      CourseExam[]
+  enrollments      Enrollment[]
+}
+
+model CourseToExamCategory {
+  id String @id @default(cuid())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  examCategoryId String
+  examCategory   ExamCategory @relation(fields: [examCategoryId], references: [id], onDelete: Cascade)
+}
+
+model CourseExam {
+  id String @id @default(cuid())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+}
+
+model Enrollment {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  totalAmount Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+}
+
+enum CourseLevel {
+  BASIC
+  STANDARD
+  PREMIUM
+}
