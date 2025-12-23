@@ -202,47 +202,32 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useSession } from "next-auth/react";
-import { Course } from "@/type/course";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-/* ✅ Extend Course locally (NO global change) */
-type CourseWithImage = Course & {
+/* ✅ UI-only course type (NOT backend Course) */
+type CourseCard = {
+  id: string;
+  title: string;
+  subtitle: string;
+  level: "BASIC" | "STANDARD" | "PREMIUM";
+  examCategories: { id: string; name: string }[];
   image?: string;
+  price: number;
+  modeOfLearning?: string;
+  courseContent?: string;
 };
 
 export default function Page() {
   const { data: session } = useSession();
 
-  const [courses, setCourses] = useState<CourseWithImage[] | null>(null);
+  const [courses, setCourses] = useState<CourseCard[] | null>(null);
   const [selectedCourse, setSelectedCourse] =
-    useState<CourseWithImage | null>(null);
+    useState<CourseCard | null>(null);
 
-  useEffect(() => {
-    async function fetchCourses(userid: string) {
-      try {
-        const response = await fetch(`/api/v1/courses/users/${userid}`);
-        const data = await response.json();
-        setCourses(data.data);
-      } catch (error) {
-        console.log("Error fetching courses:", error);
-      }
-    }
-
-    const userid = session?.user.id;
-    if (!userid) {
-      console.log("User ID is not available.");
-      return;
-    }
-
-    fetchCourses(userid);
-  }, [session?.user.id]);
-
-  const handleCardClick = (course: CourseWithImage) => {
+  const handleCardClick = (course: CourseCard) => {
     setSelectedCourse(course);
   };
 
@@ -253,7 +238,6 @@ export default function Page() {
   return (
     <div className="flex-1 min-h-screen bg-gradient-to-b from-blue-400 to-gray-200 pt-6">
       <main className="p-8 space-y-8 max-w-7xl mx-auto">
-        {/* Featured Courses */}
         <div className="mb-12">
           <h2 className="text-3xl font-bold mb-6 text-black">
             Featured Courses
@@ -262,7 +246,7 @@ export default function Page() {
           <div className="flex justify-center gap-6">
             {/* WBJEE */}
             <Card
-              className="transform hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 w-80 bg-white rounded-xl"
+              className="w-80 cursor-pointer hover:scale-105 transition"
               onClick={() =>
                 handleCardClick({
                   id: "1",
@@ -277,76 +261,24 @@ export default function Page() {
                   image: "/assets/images/jee_course.jpg",
                   price: 0,
                   modeOfLearning: "Online",
-                  courseContent: `SynergiaPrep WBJEE is a self-paced, AI-powered platform designed for serious aspirants.
-
-Key Features:
-- Unlimited practice
-- PYQ-based tests
-- Expert mock exams
-- AI progress tracking`,
+                  courseContent: `AI-powered WBJEE practice platform with unlimited tests and analytics.`,
                 })
               }
             >
               <CardContent className="p-0">
                 <Image
                   src="/assets/images/jee_course.jpg"
-                  alt="WBJEE Practice Platform"
+                  alt="WBJEE"
                   width={320}
                   height={180}
                   className="w-full h-48 object-cover rounded-t-xl"
                 />
-                <div className="p-6 pt-8">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                <div className="p-6">
+                  <h3 className="font-semibold">
                     WBJEE Practice Platform
                   </h3>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Smart Practice. Smarter Strategy. Sure Success.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* NEET */}
-            <Card
-              className="transform hover:scale-105 hover:shadow-xl cursor-pointer transition-all duration-300 w-80 bg-white rounded-xl"
-              onClick={() =>
-                handleCardClick({
-                  id: "2",
-                  title: "SynergiaPrep NEET UG Practice Platform",
-                  subtitle: "Practice. Analyze. Strategize. Succeed.",
-                  level: "PREMIUM",
-                  examCategories: [
-                    { id: "cat4", name: "Physics" },
-                    { id: "cat5", name: "Chemistry" },
-                    { id: "cat6", name: "Biology" },
-                  ],
-                  image: "/assets/images/neet_course.jpg",
-                  price: 0,
-                  modeOfLearning: "Online",
-                  courseContent: `SynergiaPrep NEET UG helps you master concepts and exam strategy.
-
-Key Features:
-- Chapter-wise tests
-- Full mock exams
-- Smart analytics
-- Rank-focused strategy`,
-                })
-              }
-            >
-              <CardContent className="p-0">
-                <Image
-                  src="/assets/images/neet_course.jpg"
-                  alt="NEET UG Practice Platform"
-                  width={320}
-                  height={180}
-                  className="w-full h-48 object-cover rounded-t-xl"
-                />
-                <div className="p-6 pt-8">
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    NEET UG Practice Platform
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Practice. Analyze. Strategize. Succeed.
+                  <p className="text-sm text-gray-600">
+                    Smart Practice. Smarter Strategy.
                   </p>
                 </div>
               </CardContent>
@@ -354,55 +286,15 @@ Key Features:
           </div>
         </div>
 
-        {/* Overlay */}
         {selectedCourse && (
-          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-3xl max-h-[85vh] overflow-y-auto bg-white rounded-xl shadow-2xl">
-              <CardHeader className="border-b border-gray-200">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-2xl text-gray-900">
-                    {selectedCourse.title}
-                  </CardTitle>
-                  <Button variant="ghost" onClick={handleCloseOverlay}>
-                    ✕
-                  </Button>
-                </div>
+          <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+            <Card className="max-w-3xl w-full">
+              <CardHeader>
+                <CardTitle>{selectedCourse.title}</CardTitle>
               </CardHeader>
-
-              <CardContent className="space-y-6 p-6">
-                <Image
-                  src={
-                    selectedCourse.image ||
-                    "/assets/images/placeholder.jpg"
-                  }
-                  alt={selectedCourse.title}
-                  width={240}
-                  height={135}
-                  className="w-60 h-36 object-cover rounded-md"
-                />
-
-                <div className="flex space-x-4">
-                  <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                    <Link href={`/checkout?courseId=${selectedCourse.id}`}>
-                      Buy Now
-                    </Link>
-                  </Button>
-
-                  <Button asChild variant="outline">
-                    <Link href={`/courses/${selectedCourse.id}/mock-test`}>
-                      Take a Free Mock Test
-                    </Link>
-                  </Button>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    Course Content
-                  </h3>
-                  <p className="text-sm text-gray-600 whitespace-pre-line">
-                    {selectedCourse.courseContent}
-                  </p>
-                </div>
+              <CardContent>
+                <p>{selectedCourse.courseContent}</p>
+                <Button onClick={handleCloseOverlay}>Close</Button>
               </CardContent>
             </Card>
           </div>
