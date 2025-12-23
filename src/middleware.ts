@@ -1,9 +1,5 @@
-import authConfig from "./auth.config";
-import NextAuth from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { privateRoutes, authRoutes, adminRoutes, examprepapiRoutes, superadminRoutes } from "./route";
-import { RoleType } from "@prisma/client";
-const { auth } = NextAuth(authConfig);
+import { privateRoutes, authRoutes, adminRoutes } from "./route";
 // const allowedOrigins = [
 //   'http://localhost:3000'
 // ];
@@ -11,20 +7,24 @@ const { auth } = NextAuth(authConfig);
 //   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 //   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 // }
-export const middleware = auth((req) => {
+export const middleware = (req: NextRequest) => {
   const res = NextResponse.next();
   const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
   const pathname = nextUrl.pathname;
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  const isPrivateRoute = privateRoutes.some((route) =>
-    nextUrl.pathname.startsWith(route)
-  );
+  // Determine login by presence of NextAuth session cookie (supports both secure and non-secure names)
+  const sessionCookie =
+    req.cookies.get("__Secure-next-auth.session-token")?.value ||
+    req.cookies.get("next-auth.session-token")?.value ||
+    req.cookies.get("next-auth.callback-url")?.value ||
+    undefined;
 
-  const isAdminRoutes = adminRoutes.some((route) =>
-    nextUrl.pathname.startsWith(route)
-  );
+  const isLoggedIn = !!sessionCookie;
+  const isAuthRoute = authRoutes.includes(pathname);
+
+  const isPrivateRoute = privateRoutes.some((route) => pathname.startsWith(route));
+
+  const isAdminRoutes = adminRoutes.some((route) => pathname.startsWith(route));
 
   // const isexamPrepApiRoutes = examprepapiRoutes.some((route) =>  nextUrl.pathname.startsWith(route));
 
@@ -71,17 +71,12 @@ export const middleware = auth((req) => {
     return NextResponse.next();
   }
 
-  // Admin route handling
+  // Admin route handling: ensure logged in. Detailed role checks run server-side in admin pages.
   if (isAdminRoutes) {
     if (!isLoggedIn) {
       const redirectUrl = new URL("/login", nextUrl);
       redirectUrl.searchParams.set("next", pathname);
       return NextResponse.redirect(redirectUrl);
-    }
-
-    const userRole = req?.auth?.user?.role?.toUpperCase();
-    if (userRole as RoleType !== RoleType.ADMIN && userRole as RoleType !== RoleType.SUPERADMIN) {
-      return NextResponse.redirect(new URL("/examprep/dashboard", nextUrl));
     }
     return res;
   }
