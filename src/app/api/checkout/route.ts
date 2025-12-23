@@ -73,13 +73,20 @@ export async function POST(request: NextRequest) {
       key: process.env.RAZORPAY_KEY_ID, // Send to frontend
     });
 
-  } catch (error: any) {
-    console.error('Razorpay API Error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Failed to create payment order' },
-      { status: 500 }
-    );
-  }
+ } catch (error: unknown) {
+  console.error('Razorpay API Error:', error);
+
+  const message =
+    error instanceof Error
+      ? error.message
+      : 'Failed to create payment order';
+
+  return NextResponse.json(
+    { error: message },
+    { status: 500 }
+  );
+}
+
 }
 
 // Test endpoint
