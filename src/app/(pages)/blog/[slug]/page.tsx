@@ -3,8 +3,10 @@ import Image from "next/image";
 import { Calendar, MessageSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-type Params = {
-  params: { slug: string };
+type PageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
 };
 
 const blogs = [
@@ -46,14 +48,18 @@ const blogs = [
   },
 ];
 
-export default function BlogPost({ params }: Params) {
-  const post = blogs.find((b) => b.slug === params.slug);
+export default async function BlogPost({ params }: PageProps) {
+  const { slug } = await params;
+
+  const post = blogs.find((b) => b.slug === slug);
 
   if (!post) {
     return (
       <div className="container mx-auto py-12">
         <h1 className="text-2xl font-bold">Blog post not found</h1>
-        <p className="text-muted-foreground mt-2">The requested blog post does not exist.</p>
+        <p className="text-muted-foreground mt-2">
+          The requested blog post does not exist.
+        </p>
       </div>
     );
   }
@@ -81,8 +87,8 @@ export default function BlogPost({ params }: Params) {
             src={post.image}
             alt={post.title}
             fill
-            style={{ objectFit: "cover" }}
             sizes="100vw"
+            className="object-cover"
             unoptimized
           />
         </div>
