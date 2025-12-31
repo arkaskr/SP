@@ -56,8 +56,8 @@ const mathJaxConfig = {
     enableMenu: false,
   },
   startup: {
-      typeset: true,
-    },
+    typeset: true,
+  },
 };
 
 const createQuestionSchema = (questionType: QuestionType) => {
@@ -169,7 +169,10 @@ export function QuestionForm({
       options: [
         { isCorrect: false, text: "", imageFile: null },
         { isCorrect: false, text: "", imageFile: null },
+        { isCorrect: false, text: "", imageFile: null },
+        { isCorrect: false, text: "", imageFile: null },
       ],
+
       answerExplanationField: {
         text: "",
         explanation: "",
@@ -184,7 +187,7 @@ export function QuestionForm({
   const openLatexEditor = (fieldName: string) => {
     setCurrentField((prev) => fieldName);
     const currentValue = form.getValues(fieldName as "text");
-    setEditorInitialValue(c=>currentValue);
+    setEditorInitialValue((c) => currentValue);
     setIsEditorOpen(true);
   };
 
@@ -316,7 +319,6 @@ export function QuestionForm({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
-                
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -327,7 +329,6 @@ export function QuestionForm({
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value);
-                            
                           }}
                           value={field.value}
                         >
@@ -380,7 +381,6 @@ export function QuestionForm({
                   />
                 </div>
 
-                
                 <div className="space-y-2">
                   <FormField
                     control={form.control}
@@ -451,7 +451,6 @@ export function QuestionForm({
                   />
                 </div>
 
-                
                 {questionType !== "INTEGER" && (
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
@@ -751,7 +750,6 @@ export function QuestionForm({
                             className="rounded-md border"
                           />
                         )}
-                        
                       </div>
                       <div className="flex gap-2 absolute right-0 top-0">
                         <Button

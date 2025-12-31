@@ -144,7 +144,7 @@ const InfoPage: React.FC<InfoPageProps> = ({
       </div>
 
       <footer className="mt-8 pt-4 border-t text-center text-sm text-gray-600">
-        © All Rights Reserved - National Testing Agency
+        © All Rights Reserved - SynergiaPrep Pvt. Ltd.
       </footer>
     </div>
   );

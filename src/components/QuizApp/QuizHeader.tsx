@@ -71,7 +71,7 @@ export default function QuizHeader({
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-2">
             <Image
-              src="/assets/images/logo.svg"
+              src="/assets/images/android-chrome-192x192.png"
               alt="SynergiaTech Logo"
               width={32}
               height={32}
