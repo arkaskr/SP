@@ -71,7 +71,7 @@ export function AppSidebar({ className }: { className?: string }) {
           label: "Analysis",
           href: `${basePath}/analysis`,
         },
-        { icon: Archive, label: "Archive", href: `${basePath}/archive` }, // Added Archive
+        { icon: Archive, label: "Archive", href: "/archive" }, // Changed to /archive
       ];
     } else {
       // User is NOT logged in - show limited items
@@ -80,7 +80,7 @@ export function AppSidebar({ className }: { className?: string }) {
         { icon: FileText, label: "PYQ Bank", href: `${basePath}/pyqbank` },
         { icon: BookOpen, label: "Mock", href: `${basePath}/mock` },
         { icon: PenLine, label: "Quiz", href: `${basePath}/quiz` },
-        { icon: Archive, label: "Archive", href: `${basePath}/archive` }, // Added Archive
+        { icon: Archive, label: "Archive", href: "/archive" }, // Changed to /archive
         // Dashboard, Brainstorm, and Analysis are NOT included here
       ];
     }
