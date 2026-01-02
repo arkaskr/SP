@@ -184,7 +184,7 @@ export function Navbar() {
           </Link>
 
           {/* Join Now / Logout Button */}
-          {!session &&(
+          {!session && (
             <Link
               href="/login"
               className="sm:w-32 bg-white font-semibold text-blue-800 sm:h-12 px-2 py-1 rounded-md hover:bg-gray-300 hover:text-black transition duration-500 flex items-center justify-center"
