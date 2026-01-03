@@ -33,34 +33,38 @@ export default function DeleteExamButton({
   }
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this exam? This action cannot be undone."
-    );
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this exam? This action cannot be undone."
+  );
 
-    if (!confirmed) return;
+  if (!confirmed) return;
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await fetch(`/api/v1/exams/${examId}`, {
-        method: "DELETE",
-      });
+    const res = await fetch(`/api/v1/exams/${examId}`, {
+      method: "DELETE",
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to delete exam");
-      }
-
-      alert("Exam deleted successfully");
-
-      onDeleted?.();
-    } catch (error: any) {
-      alert(error.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(data?.message ?? "Failed to delete exam");
     }
-  };
+
+    alert("Exam deleted successfully");
+    onDeleted?.();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      alert(error.message);
+    } else {
+      alert("Something went wrong");
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <Button
