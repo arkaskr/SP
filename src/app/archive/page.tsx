@@ -66,14 +66,7 @@ interface ArchivePDF {
   category: "PYQ" | "Notes" | "Formula" | "Sample Paper" | "Reference";
 }
 
-interface UserSession {
-  user?: {
-    role?: string;
-  };
-}
-
 const ArchivesPage: React.FC = () => {
-  const [session, setSession] = useState<UserSession>({ user: { role: "user" } });
   const [archivePDFs, setArchivePDFs] = useState<ArchivePDF[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
@@ -91,22 +84,17 @@ const ArchivesPage: React.FC = () => {
     category: "Notes",
   });
 
-  const { data: sessions } = useSession(); 
-  let role = sessions?.user?.role || "user";
+  const { data: session } = useSession(); 
+  let role = session?.user?.role || "user";
   const isAdmin = role.toLocaleLowerCase() === "admin" || role.toLocaleLowerCase() === "superadmin";
 
   const [subjectInput, setSubjectInput] = useState("");
   const [selectedPdf, setSelectedPdf] = useState<ArchivePDF | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleteing, setIsDeleteing] = useState(false);  
+  const [isAdding, setIsAdding] = useState(false);
 
-  // Mock session
-  useEffect(() => {
-    const mockSession: UserSession = {
-      user: { role: "admin" },
-    };
-    setSession(mockSession);
-  }, []);
+  
 
   // Fetch archives
   useEffect(() => {
@@ -148,6 +136,7 @@ const ArchivesPage: React.FC = () => {
 
   // Add PDF (POST)
   const handleAddPdf = async () => {
+    setIsAdding(true);
     try {
       if (!formData.title || !formData.downloadUrl) {
         toast.error("Title and download URL are required");
@@ -194,6 +183,8 @@ const ArchivesPage: React.FC = () => {
     } catch (err) {
       console.error(err);
       toast.error("Failed to add PDF");
+    } finally{
+      setIsAdding(false);
     }
   };
 
@@ -594,11 +585,12 @@ const ArchivesPage: React.FC = () => {
                       Cancel
                     </Button>
                     <Button 
+                  
                       onClick={handleAddPdf}
                       className="bg-green-600 hover:bg-green-700"
-                      disabled={!formData.title || !formData.downloadUrl}
+                      disabled={isAdding || !formData.title || !formData.downloadUrl }
                     >
-                      Add to Archive
+                      {isAdding ? "Adding..." : "Add PDF To Archive"}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
@@ -626,7 +618,7 @@ const ArchivesPage: React.FC = () => {
             <DialogHeader>
               <DialogTitle>Delete Study Material</DialogTitle>
               <DialogDescription>
-                Are you sure you want to delete "{selectedPdf.title}"? This action cannot be undone.
+                {`Are you sure you want to delete "${selectedPdf.title}"? This action cannot be undone.`}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex justify-end gap-2">
