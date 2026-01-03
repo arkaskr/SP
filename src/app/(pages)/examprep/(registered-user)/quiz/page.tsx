@@ -40,6 +40,7 @@ import {
 import Loading from "@/components/Loading";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import DeleteExamButton from "@/components/DeleteExamButton";
 
 interface quizTest {
   id: string;
@@ -292,6 +293,14 @@ const Page: React.FC = () => {
             >
               {isLoggedIn ? "Start Quiz" : "Login to Start"}
             </Button>
+            <DeleteExamButton
+  examId={test.id}
+  onDeleted={() => {
+    setQuizTests((prev) =>
+      prev.filter((exam) => exam.id !== test.id)
+    );
+  }}
+/>
           </CardFooter>
         </Card>
       </div>

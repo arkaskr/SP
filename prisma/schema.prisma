@@ -484,3 +484,21 @@ enum CourseLevel {
   STANDARD
   PREMIUM
 }
+
+
+model ArchivePDF {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  subjects    String[] // array of subjects as strings
+  exam        String?
+  year        Int?
+  fileSize    String?
+  pages       Int?
+  fileType    String   @default("PDF")
+  downloadUrl String
+  category    String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
