@@ -6,8 +6,25 @@ import Link from "next/link";
 import { PiHandTapBold } from "react-icons/pi";
 import { RiGlobalLine } from "react-icons/ri";
 import { FaDatabase } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaYoutube,
+  FaInstagram,
+  FaLinkedin,
+  FaWhatsapp,
+  FaTelegram,
+} from "react-icons/fa";
 import { FeaturesItem } from "./featuresItem";
-import { FaFacebook, FaYoutube, FaInstagram, FaLinkedin } from "react-icons/fa";
+
+// Social media links configuration - You can update these URLs
+const SOCIAL_MEDIA_LINKS = {
+  facebook: "https://www.facebook.com/share/18NpK7SaLf/",
+  youtube: "https://youtube.com/@joddha_wbjee",
+  instagram: "https://www.instagram.com/yourprofile",
+  linkedin: "https://www.linkedin.com/company/joddha/",
+  whatsapp: "https://chat.whatsapp.com/BNDZtSoUz140vLdGymoG6p",
+  telegram: "https://t.me/+7wTcUKXjGTQ2YWI1",
+};
 
 export function Hero() {
   return (
@@ -38,7 +55,7 @@ export function Hero() {
               {/* Alumni + CTA */}
               <div className="mt-6 sm:mt-8 space-y-4">
                 <p className="text-white/80 text-xs sm:text-sm uppercase tracking-wide">
-                  Built by Alumni from
+                  Build by Alumni from
                 </p>
 
                 {/* BIG JU LOGO */}
@@ -136,32 +153,60 @@ export function Hero() {
                   </p>
                   <div className="flex flex-wrap gap-4 sm:gap-6">
                     <a
-                      href="#"
+                      href={SOCIAL_MEDIA_LINKS.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors"
                       aria-label="Facebook"
                     >
                       <FaFacebook className="w-6 h-6 text-blue-600" />
                     </a>
                     <a
-                      href="#"
+                      href={SOCIAL_MEDIA_LINKS.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 hover:bg-red-100 transition-colors"
                       aria-label="YouTube"
                     >
                       <FaYoutube className="w-6 h-6 text-red-600" />
                     </a>
                     <a
-                      href="#"
+                      href={SOCIAL_MEDIA_LINKS.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center w-12 h-12 rounded-full bg-pink-50 hover:bg-pink-100 transition-colors"
                       aria-label="Instagram"
                     >
                       <FaInstagram className="w-6 h-6 text-pink-600" />
                     </a>
                     <a
-                      href="#"
+                      href={SOCIAL_MEDIA_LINKS.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors"
                       aria-label="LinkedIn"
                     >
                       <FaLinkedin className="w-6 h-6 text-blue-700" />
+                    </a>
+                    {/* WhatsApp Icon */}
+                    <a
+                      href={SOCIAL_MEDIA_LINKS.whatsapp}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-12 h-12 rounded-full bg-green-50 hover:bg-green-100 transition-colors"
+                      aria-label="WhatsApp"
+                    >
+                      <FaWhatsapp className="w-6 h-6 text-green-600" />
+                    </a>
+                    {/* Telegram Icon */}
+                    <a
+                      href={SOCIAL_MEDIA_LINKS.telegram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors"
+                      aria-label="Telegram"
+                    >
+                      <FaTelegram className="w-6 h-6 text-blue-500" />
                     </a>
                   </div>
                 </div>
@@ -172,7 +217,7 @@ export function Hero() {
                 <div className="relative w-full aspect-video">
                   <iframe
                     className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                    src="https://www.youtube.com/embed/PQEUHzbimVo"
                     title="Joddha YouTube Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

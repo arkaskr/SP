@@ -14,7 +14,7 @@ const ExpertsTalk = () => {
         </h1>
 
         <p className="text-gray-600 text-base sm:text-lg">
-          Our team is here to help you navigate every aspect of studying abroad.
+          Our team is here to help you navigate every aspect of learning and career.
         </p>
 
         <div>
