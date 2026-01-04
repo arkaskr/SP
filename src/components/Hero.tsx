@@ -34,7 +34,10 @@ export function Hero() {
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center px-4 sm:px-6 md:px-8 gap-8 lg:gap-16">
           {/* LEFT CONTENT */}
           <div className="w-full lg:w-3/5 xl:w-3/4">
-            <div className="w-full p-4 sm:p-6 md:p-8 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,_transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,_transparent_2px)] bg-[size:20px_20px] sm:bg-[size:30px_30px] md:bg-[size:40px_40px] rounded-xl">
+            <div
+              className="w-full p-4 sm:p-6 md:p-8 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,_transparent_2px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,_transparent_2px)] bg-[size:20px_20px] sm:bg-[size:30px_30px] md:bg-[size:40px_40px] bg-[position:-15px_12px] 
+ rounded-xl"
+            >
               <div className="text-xs sm:text-sm md:text-base text-white font-semibold uppercase tracking-wide mb-3">
                 India&apos;s Front-running Startup
               </div>

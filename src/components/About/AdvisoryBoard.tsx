@@ -112,7 +112,7 @@ export const AdvisoryBoard: React.FC<AdvisoryBoardProps> = ({
                       <AvatarImage
                         src={advisor.image}
                         alt={advisor.name}
-                        className="object-scale-down bg-white" // Changed from object-cover to object-scale-down
+                        className="object-scale-down bg-white"
                       />
                       <AvatarFallback className="text-4xl bg-primary/10">
                         {advisor.name
@@ -156,23 +156,33 @@ export const AdvisoryBoard: React.FC<AdvisoryBoardProps> = ({
                     {selectedAdvisor.position[0]}
                   </DialogDescription>
                 </DialogHeader>
-                <Tabs defaultValue="profile" className="w-full p-6">
-                  <TabsList className="w-full justify-center mb-6">
+
+                {/* Reduced padding around the tabs and removed bottom margin */}
+                <Tabs defaultValue="profile" className="w-full p-2">
+                  {" "}
+                  {/* Changed from p-6 */}
+                  <TabsList className="w-full justify-center mb-2">
+                    {" "}
+                    {/* Changed from mb-6 */}
                     <TabsTrigger value="profile">Profile</TabsTrigger>
                     <TabsTrigger value="bio">Biography</TabsTrigger>
                     <TabsTrigger value="achievements">Achievements</TabsTrigger>
                   </TabsList>
-
                   <ScrollArea className="w-full h-[50vh]">
-                    <TabsContent value="profile" className="space-y-6 p-4">
-                      <div className="flex flex-col md:flex-row gap-8 items-center">
+                    {/* Reduced padding and spacing in tab content */}
+                    <TabsContent value="profile" className="space-y-4 p-3">
+                      {" "}
+                      {/* Changed from space-y-6 p-4 */}
+                      <div className="flex flex-col md:flex-row gap-6 items-center">
+                        {" "}
+                        {/* Changed from gap-8 */}
                         <div className="md:w-1/3 flex justify-center">
                           <div className="w-52 h-52 rounded-xl overflow-hidden border-4 border-primary/20">
                             <Avatar className="w-full h-full">
                               <AvatarImage
                                 src={selectedAdvisor.image}
                                 alt={selectedAdvisor.name}
-                                className="object-scale-down bg-white" // Changed from object-cover to object-scale-down
+                                className="object-scale-down bg-white"
                               />
                               <AvatarFallback className="text-6xl bg-primary/10">
                                 {selectedAdvisor.name
@@ -184,14 +194,21 @@ export const AdvisoryBoard: React.FC<AdvisoryBoardProps> = ({
                           </div>
                         </div>
                         <div className="md:w-2/3">
-                          <div className="space-y-2 mb-4">
+                          <div className="space-y-1 mb-2">
+                            {" "}
+                            {/* Changed from space-y-2 mb-4 */}
                             {selectedAdvisor.position.map((pos, idx) => (
-                              <p key={idx} className="text-muted-foreground">
+                              <p
+                                key={idx}
+                                className="text-muted-foreground text-sm"
+                              >
                                 {pos}
                               </p>
                             ))}
                           </div>
-                          <div className="flex flex-wrap gap-2 mt-4">
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {" "}
+                            {/* Changed from gap-2 mt-4 */}
                             {selectedAdvisor.expertise.map((skill, idx) => (
                               <Badge
                                 key={idx}
@@ -206,30 +223,44 @@ export const AdvisoryBoard: React.FC<AdvisoryBoardProps> = ({
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="bio" className="p-4">
-                      <div className="prose prose-lg max-w-none dark:prose-invert">
+                    <TabsContent value="bio" className="p-3">
+                      {" "}
+                      {/* Changed from p-4 */}
+                      <div className="prose prose-base max-w-none dark:prose-invert">
+                        {" "}
+                        {/* Changed from prose-lg */}
                         <p className="text-justify leading-relaxed">
                           &quot;{selectedAdvisor.bio}&quot;
                         </p>
                       </div>
                     </TabsContent>
 
-                    <TabsContent value="achievements" className="p-4">
-                      <div className="space-y-6">
-                        <h4 className="font-semibold text-xl text-center mb-6 text-primary">
+                    <TabsContent value="achievements" className="p-3">
+                      {" "}
+                      {/* Changed from p-4 */}
+                      <div className="space-y-4">
+                        {" "}
+                        {/* Changed from space-y-6 */}
+                        <h4 className="font-semibold text-lg text-center mb-4 text-primary">
+                          {" "}
+                          {/* Changed from text-xl mb-6 */}
                           Key Accomplishments
                         </h4>
-                        <ul className="space-y-4">
+                        <ul className="space-y-2">
                           {selectedAdvisor.achievements.map(
                             (achievement, idx) => (
                               <li
                                 key={idx}
-                                className="flex items-start p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors"
+                                className="flex items-start p-2 rounded-md bg-primary/5 hover:bg-primary/10 transition-colors" /* Changed from p-3 rounded-lg */
                               >
-                                <span className="mr-3 text-primary text-xl">
-                                  •
+                                <span className="mr-2 text-primary text-lg">
+                                  {" "}
+                                  {/* Changed from mr-3 text-xl */}•
                                 </span>
-                                <p className="text-foreground">{achievement}</p>
+                                <p className="text-foreground text-sm">
+                                  {achievement}
+                                </p>{" "}
+                                {/* Added text-sm */}
                               </li>
                             )
                           )}

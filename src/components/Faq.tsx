@@ -20,81 +20,59 @@ type FAQItem = {
 
 const content: FAQItem[] = [
   {
-    question:
-      "What certifications does SynergiaPrep provide for studying abroad?",
+    question: "What certificate courses do you offer?",
     answer:
-      "SynergiaPrep offers internationally recognized certifications for Python, Machine Learning, Data Science, and application-based courses like Urban Flow, Smart Data Scale, etc.",
+      "We offer a wide range of professionally designed, industry-oriented certificate courses focused on skill development, career advancement, and practical learning across multiple domains.",
   },
   {
-    question:
-      "How can I enroll in SynergiaPrep’s study abroad certification courses?",
+    question: "Who can enroll in the certificate courses?",
     answer:
-      "Enrollment is simple. Visit our website, select the desired certification course, and fill out the online registration form. Alternatively, contact our support team directly for assistance.",
+      "Our certificate courses are open to students, graduates, working professionals, and career changers who wish to enhance their skills or gain industry-relevant knowledge.",
   },
   {
-    question: "Does SynergiaPrep offer personalized exam preparation coaching?",
+    question: "Are the certificate courses industry-oriented?",
     answer:
-      "Yes, SynergiaPrep provides customized coaching sessions designed to meet individual learning styles and improve specific skill areas for optimal exam performance.",
+      "Yes, all our certificate programs are designed with a strong industry focus, emphasizing practical skills, real-world applications, and current market requirements.",
   },
   {
-    question:
-      "Can SynergiaPrep assist me in selecting the right certification exam based on my educational goals?",
+    question: "What is the duration of the certificate courses?",
     answer:
-      "Certainly! Our expert counselors provide personalized consultations to guide you toward the most appropriate certification based on your desired destination, university, and program of study.",
+      "Course duration varies depending on the program and typically ranges from a few weeks to a few months.",
   },
   {
-    question: "Are SynergiaPrep’s certifications globally recognized?",
+    question: "Do you offer online certificate courses?",
     answer:
-      "Absolutely. Certifications provided by SynergiaPrep, including IELTS, TOEFL, GRE, GMAT, SAT, and PTE, are globally recognized and widely accepted by universities worldwide.",
+      "Yes, we offer flexible learning options, including online and hybrid certificate courses, allowing learners to study at their own pace.",
   },
   {
-    question: "What is the duration of SynergiaPrep certification courses?",
+    question: "Will I receive a certificate upon completion?",
     answer:
-      "The course duration varies based on the specific certification exam and individual preparation needs, typically ranging from 4 to 12 weeks, with flexible schedules to accommodate all students.",
+      "Yes, learners receive a certificate of completion after successfully finishing the course requirements.",
   },
   {
-    question:
-      "Does SynergiaPrep provide assistance beyond certification, such as study abroad applications?",
+    question: "Are the certificates recognized by employers?",
     answer:
-      "Yes, SynergiaPrep offers comprehensive support throughout the application process, including university selection, application assistance, documentation guidance, and visa counseling.",
+      "Our certificates are designed to align with industry standards and are valued by employers for skill-based roles and career enhancement.",
   },
   {
-    question: "What kind of visa support does SynergiaPrep offer?",
+    question: "Do the courses include practical training or projects?",
     answer:
-      "Our experienced advisors provide visa counseling, documentation assistance, mock interview preparations, and step-by-step guidance to facilitate a smooth visa application process.",
+      "Yes, most courses include hands-on training, case studies, and practical projects to ensure real-world learning experience.",
   },
   {
-    question: "How much do SynergiaPrep certification courses cost?",
+    question: "How can I enroll in a certificate course?",
     answer:
-      "Course fees vary based on the chosen certification and duration. Please visit our website or contact our support team for detailed pricing.",
-    link: "https://synergiaprep.com/pricing",
+      "You can enroll by contacting our admissions team or filling out the enrollment form on our website.",
   },
   {
-    question: "Does SynergiaPrep offer online courses?",
+    question: "What is the fee structure for certificate courses?",
     answer:
-      "Yes, SynergiaPrep provides convenient online certification courses, enabling students to prepare flexibly and effectively from anywhere.",
+      "Course fees vary based on the program. Please contact us or visit the course details page for complete fee information.",
   },
   {
-    question:
-      "Does SynergiaPrep provide support for living arrangements abroad?",
+    question: "Do you provide career guidance or support?",
     answer:
-      "Yes, SynergiaPrep assists students in finding suitable living arrangements abroad, including hostel accommodations, student housing, and affordable rental options.",
-  },
-  {
-    question: "Can SynergiaPrep assist with scholarships and financial aid?",
-    answer:
-      "Absolutely! We guide students in identifying and applying for various scholarships and financial aid opportunities to support their overseas education.",
-  },
-  {
-    question:
-      "Does SynergiaPrep provide support for one-semester exchange programs?",
-    answer:
-      "Yes, we offer tailored support for students participating in one-semester academic exchange programs, including application assistance and documentation guidance.",
-  },
-  {
-    question: "How does SynergiaPrep help students adapt to studying abroad?",
-    answer:
-      "SynergiaPrep provides cultural orientation and counseling to help students transition smoothly into the academic environment abroad while staying connected to their Indian roots.",
+      "Yes, we offer guidance to help learners choose the right course aligned with their career goals.",
   },
 ];
 
@@ -112,48 +90,46 @@ const FAQ = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600">
+          <p className="text-base sm:text-lg md:text-xl text-black">
             Can&apos;t find the answer you&apos;re looking for? Reach out to our
             customer support team.
           </p>
         </motion.div>
 
-        {/* Accordion */}
-        <div className="not-prose mt-4 flex flex-col gap-4 md:mt-8 max-w-6xl mx-auto">
+        {/* Accordion with spacing */}
+        <div className="not-prose max-w-6xl mx-auto">
           <Accordion
             type="single"
             collapsible
             className="w-full max-w-[1000px] mx-auto"
           >
-            {content.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.08 }}
-              >
-                <AccordionItem
-                  value={item.question}
-                  className="rounded-lg border-none bg-white/10 backdrop-blur-sm text-white hover:bg-black/20 transition-all"
+            {content.map(
+              (
+                item,
+                index // Fixed: Changed FAQItem to content
+              ) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.08 }}
+                  className="mb-2" // Added margin-bottom for spacing between questions
                 >
-                  <AccordionTrigger className="text-left hover:no-underline text-white text-base sm:text-lg hover:text-blue-300 px-4 py-3">
-                    {item.question}
-                  </AccordionTrigger>
+                  <AccordionItem
+                    value={item.question}
+                    className="rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all"
+                  >
+                    <AccordionTrigger className="text-left hover:no-underline text-white text-base sm:text-lg hover:text-blue-300 px-4 py-3">
+                      {item.question}
+                    </AccordionTrigger>
 
-                  <AccordionContent className="text-gray-50 text-sm px-4 py-3">
-                    {item.answer}
-                    {item.link && (
-                      <Link
-                        href={item.link}
-                        className="mt-2 flex items-center text-blue-300 hover:text-blue-400 transition-colors"
-                      >
-                        Learn more <ArrowUpRight className="ml-1" size={16} />
-                      </Link>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-              </motion.div>
-            ))}
+                    <AccordionContent className="text-gray-100 text-sm px-4 py-3">
+                      {item.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              )
+            )}
           </Accordion>
         </div>
       </Container>

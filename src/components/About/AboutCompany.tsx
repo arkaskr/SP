@@ -94,7 +94,7 @@ export const AboutCompany = () => {
     "Being a reliable partner in every student’s journey to success",
     "Providing AI/ML-powered personalized exam preparation and insights",
     "Bridging academic and professional growth through internships and certifications",
-    "Creating global opportunities via innovation and study-abroad consultations",
+    "Creating global opportunities via innovation",
   ];
 
   return (
