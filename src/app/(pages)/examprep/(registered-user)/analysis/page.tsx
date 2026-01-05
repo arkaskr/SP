@@ -760,8 +760,7 @@ const TestAnalysisDashboard: React.FC = () => {
                   size={isMobile ? 16 : 20}
                 />
               }
-              trend="up"
-              trendValue="+2.5%"
+              
             />
             <StatItem
               label="Total Tests"
@@ -772,8 +771,7 @@ const TestAnalysisDashboard: React.FC = () => {
                   size={isMobile ? 16 : 20}
                 />
               }
-              trend="up"
-              trendValue="+3"
+           
             />
             <StatItem
               label="Avg. Attempted"
