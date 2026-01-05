@@ -75,58 +75,101 @@ const createQuestionSchema = (questionType: QuestionType) => {
     imageFile: z.any().optional(),
   };
 
+  const optionSchema = z
+    .object({
+      isCorrect: z.boolean(),
+      text: z.string().optional(), // Changed from .min(1, "Option text is required")
+      imageFile: z.any().optional(),
+    })
+    .refine(
+      (data) => {
+        // Check if text exists and is not empty, OR if imageFile exists
+        const hasText = data.text && data.text.trim().length > 0;
+        const hasImage = data.imageFile;
+        return hasText || hasImage;
+      },
+      {
+        message: "Option must have either text or an image",
+        path: ["text"],
+      }
+    );
+
   switch (questionType) {
     case "INTEGER":
-      return z.object({
-        ...baseSchema,
-        answerExplanationField: z.object({
-          ...answerExplanationSchema,
-          value: z.string().min(1, "Numerical answer is required"),
-        }),
-      });
+      return z
+        .object({
+          ...baseSchema,
+          answerExplanationField: z.object({
+            ...answerExplanationSchema,
+            value: z.string().min(1, "Numerical answer is required"),
+          }),
+        })
+        .refine(
+          (data) => {
+            const hasText = data.text && data.text.trim().length > 0;
+            const hasImage = data.imageFile;
+            return hasText || hasImage;
+          },
+          {
+            message: "Question must have either text or an image",
+            path: ["text"],
+          }
+        );
 
     case "MULTI":
-      return z.object({
-        ...baseSchema,
-        options: z
-          .array(
-            z.object({
-              isCorrect: z.boolean(),
-              text: z.string().min(1, "Option text is required"),
-              imageFile: z.any().optional(),
-            })
-          )
-          .min(2, "At least two options are required")
-          .refine((options) => options.some((opt) => opt.isCorrect), {
-            message: "At least one option must be marked as correct",
-          }),
-        answerExplanationField: z.object(answerExplanationSchema),
-      });
+      return z
+        .object({
+          ...baseSchema,
+          options: z
+            .array(optionSchema)
+            .min(2, "At least two options are required")
+            .refine((options) => options.some((opt) => opt.isCorrect), {
+              message: "At least one option must be marked as correct",
+            }),
+          answerExplanationField: z.object(answerExplanationSchema),
+        })
+        .refine(
+          (data) => {
+            const hasText = data.text && data.text.trim().length > 0;
+            const hasImage = data.imageFile;
+            return hasText || hasImage;
+          },
+          {
+            message: "Question must have either text or an image",
+            path: ["text"],
+          }
+        );
 
     case "SINGLE":
     default:
-      return z.object({
-        ...baseSchema,
-        options: z
-          .array(
-            z.object({
-              isCorrect: z.boolean(),
-              text: z.string().min(1, "Option text is required"),
-              imageFile: z.any().optional(),
-            })
-          )
-          .min(2, "At least two options are required")
-          .refine(
-            (options) => options.filter((opt) => opt.isCorrect).length === 1,
-            {
-              message: "Exactly one option must be marked as correct",
-            }
-          ),
-        answerExplanationField: z.object({
-          ...answerExplanationSchema,
-          value: z.string().optional(),
-        }),
-      });
+      return z
+        .object({
+          ...baseSchema,
+          options: z
+            .array(optionSchema)
+            .min(2, "At least two options are required")
+            .refine(
+              (options) => options.filter((opt) => opt.isCorrect).length === 1,
+              {
+                message: "Exactly one option must be marked as correct",
+              }
+            ),
+          answerExplanationField: z.object({
+            ...answerExplanationSchema,
+            value: z.string().optional(),
+          }),
+        })
+        .refine(
+          (data) => {
+            const hasText = data.text && data.text.trim().length > 0;
+            const hasImage = data.imageFile;
+            return hasText || hasImage;
+          },
+          {
+            message: "Question must have either text or an image",
+            path: ["text"],
+          }
+        );
   }
 };
 
