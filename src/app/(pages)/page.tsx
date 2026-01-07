@@ -14,6 +14,7 @@ import { BsCheck2Circle } from "react-icons/bs";
 import Link from "next/link";
 
 // Certifications Component
+// Certifications Component - FIXED VERSION
 const Certifications = () => {
   const images = {
     img1: "/assets/images/Study_Abroad img-1.jpg",
@@ -37,7 +38,7 @@ const Certifications = () => {
   return (
     <div className="mt-10">
       {/* Banner Section */}
-      <div className="w-full bg-gradient-to-b from-[#0f3bfe] via-blue-700 to-[#eaf1ff] text-white text-center pb-0 pt-8">
+      <div className="w-full bg-gradient-to-b from-[#0f3bfe] via-blue-700 to-[#eaf1ff] text-white text-center pb-20 pt-8">
         <h1 className="text-4xl font-bold mb-4 px-4">
           Upgrade Your Skills With Certificate Courses
         </h1>
@@ -46,6 +47,7 @@ const Certifications = () => {
           personalized solutions
         </p>
 
+        {/* Centered Image with Rounded Corners and Explore More Button */}
         {/* Centered Image with Rounded Corners and Explore More Button */}
         <div className="flex justify-center mt-10 relative">
           <Image
@@ -64,8 +66,8 @@ const Certifications = () => {
         </div>
       </div>
 
-      {/* Grid Section */}
-      <div className="mt-72 px-4 md:px-20 grid md:grid-cols-2 gap-10">
+      {/* Grid Section - Reduced top margin */}
+      <div className="mt-32 px-4 md:px-20 grid md:grid-cols-2 gap-12 mx-auto">
         {/* Left Section */}
         <div className="space-y-6">
           <div className="flex gap-6">
@@ -77,7 +79,7 @@ const Certifications = () => {
                   alt="Library"
                   width={600}
                   height={224}
-                  className="w-full h-full object-cover rounded-t-xl" // Fixed: Added rounded-t-xl
+                  className="w-full h-full object-cover rounded-t-xl"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-xl"></div>
                 <div className="absolute bottom-4 left-4 text-white">
@@ -108,7 +110,7 @@ const Certifications = () => {
               alt="Image 3"
               width={600}
               height={260}
-              className="w-full h-full object-cover object-[center_30%]" // Fixed: Adjusted object position to show face
+              className="w-full h-full object-cover object-[center_30%]"
               style={{ objectPosition: "center 10%" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent rounded-xl"></div>
@@ -122,11 +124,11 @@ const Certifications = () => {
         </div>
 
         {/* Right Section with updated points */}
-        <div className="space-y-8">
-          <h2 className="text-4xl font-bold">
+        <div className="space-y-8 pt-4">
+          <h2 className="text-4xl font-bold text-gray-800">
             A Truly Personalized Learning Journey Designed Just for You
           </h2>
-          <ul className="space-y-6">
+          <ul className="space-y-4">
             {points.map((text, index) => (
               <li key={index} className="flex items-start gap-4 text-gray-700">
                 <BsCheck2Circle className="text-blue-600 flex-shrink-0 mt-1 w-6 h-6" />
@@ -134,15 +136,17 @@ const Certifications = () => {
               </li>
             ))}
           </ul>
-          <Link href="/study-abroad" className="inline-block">
-            <button className="mt-4 bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition text-lg font-medium">
-              Join Us
-            </button>
-          </Link>
+          <div className="pt-4">
+            <Link href="/study-abroad" className="inline-block">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-full transition-all text-lg font-medium shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                Join Us
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Bottom Row of Images - Fixed positioning */}
+      {/* Bottom Row of Images */}
       <div className="mt-16 grid md:grid-cols-2 gap-6 px-4 md:px-20">
         <div className="relative h-72 rounded-xl overflow-hidden shadow-md">
           <Image

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Clients from "@/components/Home/Clients";
+import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 export default function InstrumentsAndChemicalsForm() {
   const [category, setCategory] = useState("Scientific Instruments");
@@ -20,6 +21,11 @@ export default function InstrumentsAndChemicalsForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+
+  // State for custom modal
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<"success" | "error">("success");
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleAddCAS = () => {
     setCasEntries([
@@ -41,6 +47,12 @@ export default function InstrumentsAndChemicalsForm() {
     const updated = [...casEntries];
     updated.splice(index, 1);
     setCasEntries(updated);
+  };
+
+  const showNotification = (type: "success" | "error", message: string) => {
+    setModalType(type);
+    setModalMessage(message);
+    setShowModal(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +89,12 @@ export default function InstrumentsAndChemicalsForm() {
       console.log("Web3Forms response:", result);
 
       if (result.success) {
-        alert("Form submitted successfully!");
+        showNotification(
+          "success",
+          "Form submitted successfully! We'll get back to you soon."
+        );
+
+        // Reset form
         setInstituteName("");
         setUserName("");
         setEmail("");
@@ -89,11 +106,17 @@ export default function InstrumentsAndChemicalsForm() {
         ]);
         setCategory("Scientific Instruments");
       } else {
-        alert("Failed to submit the form. Please try again later.");
+        showNotification(
+          "error",
+          "Failed to submit the form. Please try again later."
+        );
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Something went wrong while submitting the form.");
+      showNotification(
+        "error",
+        "Something went wrong while submitting the form."
+      );
     }
   };
 
@@ -117,6 +140,7 @@ export default function InstrumentsAndChemicalsForm() {
               </h1>
             </motion.div>
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              {/* Form fields remain exactly the same */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -237,7 +261,6 @@ export default function InstrumentsAndChemicalsForm() {
                     Chemical Information
                   </Label>
 
-                  {/* Chemical Information Header - Responsive */}
                   <div className="hidden sm:grid sm:grid-cols-5 gap-2 sm:gap-4 font-semibold text-xs sm:text-sm text-blue-500 mb-2">
                     <div className="text-center sm:text-left">CAS</div>
                     <div className="text-center sm:text-left">
@@ -256,7 +279,6 @@ export default function InstrumentsAndChemicalsForm() {
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                       className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-5 gap-2 sm:gap-4 mb-3 sm:mb-2 items-center"
                     >
-                      {/* Mobile view labels */}
                       <div className="sm:hidden text-xs font-semibold text-blue-500">
                         CAS Number
                       </div>
@@ -382,6 +404,111 @@ export default function InstrumentsAndChemicalsForm() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Custom Modal for Notifications */}
+      <AnimatePresence>
+        {showModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowModal(false)}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            >
+              {/* Modal Content */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
+                className={`relative max-w-md w-full rounded-2xl shadow-2xl overflow-hidden ${
+                  modalType === "success"
+                    ? "bg-gradient-to-br from-green-50 to-emerald-100"
+                    : "bg-gradient-to-br from-red-50 to-pink-100"
+                }`}
+              >
+                {/* Decorative elements */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+
+                <div className="p-6 md:p-8">
+                  {/* Icon */}
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.1, type: "spring" }}
+                    className={`flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full ${
+                      modalType === "success"
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {modalType === "success" ? (
+                      <CheckCircle className="w-12 h-12" />
+                    ) : (
+                      <XCircle className="w-12 h-12" />
+                    )}
+                  </motion.div>
+
+                  {/* Title */}
+                  <h3
+                    className={`text-2xl font-bold text-center mb-3 ${
+                      modalType === "success"
+                        ? "text-green-800"
+                        : "text-red-800"
+                    }`}
+                  >
+                    {modalType === "success" ? "Success!" : "Oops!"}
+                  </h3>
+
+                  {/* Message */}
+                  <p
+                    className={`text-center mb-8 text-lg ${
+                      modalType === "success"
+                        ? "text-green-700"
+                        : "text-red-700"
+                    }`}
+                  >
+                    {modalMessage}
+                  </p>
+
+                  {/* Button */}
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={() => setShowModal(false)}
+                      className={`px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 ${
+                        modalType === "success"
+                          ? "bg-green-600 hover:bg-green-700 text-white"
+                          : "bg-red-600 hover:bg-red-700 text-white"
+                      }`}
+                    >
+                      {modalType === "success" ? "Continue" : "Try Again"}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Decorative corner elements */}
+                <div
+                  className={`absolute top-0 left-0 w-12 h-12 border-t-4 border-l-4 rounded-tl-2xl ${
+                    modalType === "success"
+                      ? "border-green-300"
+                      : "border-red-300"
+                  }`}
+                />
+                <div
+                  className={`absolute bottom-0 right-0 w-12 h-12 border-b-4 border-r-4 rounded-br-2xl ${
+                    modalType === "success"
+                      ? "border-green-300"
+                      : "border-red-300"
+                  }`}
+                />
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Clients component added at the bottom */}
       <Clients />

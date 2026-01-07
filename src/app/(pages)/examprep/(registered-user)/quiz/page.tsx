@@ -431,7 +431,7 @@ const Page: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 py-12 text-center mb-8 rounded-lg shadow-sm">
+      <div className="my-[-2rem] bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 py-12 text-center mb-8 rounded-lg shadow-sm">
         <h1 className="text-4xl font-bold mb-4 text-gray-900">Quiz Bank</h1>
         <p className="text-xl text-gray-600 mb-4">
           Master your skills with targeted quiz exams and detailed solutions
@@ -456,7 +456,7 @@ const Page: React.FC = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="shadow-sm rounded-lg p-6 bg-white border mb-8">
+      <div className="shadow-sm rounded-lg pt-4 px-4 bg-white border mt-[-1.5rem] mb-2">
         <div className="space-y-4">
           <div className="flex flex-wrap gap-4 justify-between items-center">
             <div className="flex items-center w-full md:w-auto max-w-md">

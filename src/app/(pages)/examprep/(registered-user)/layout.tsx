@@ -3,7 +3,12 @@ import React, { ReactNode, useState, useEffect } from "react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ChevronRight, PanelRightClose, PanelRightOpen, Menu } from "lucide-react";
+import {
+  ChevronRight,
+  PanelRightClose,
+  PanelRightOpen,
+  Menu,
+} from "lucide-react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { useSession } from "next-auth/react";
@@ -52,15 +57,15 @@ export default function Page({ children }: PageProps) {
     <div className="flex pt-[4.2rem] min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-indigo-950 dark:to-purple-900">
       <SidebarProvider>
         <Separator />
-        <AppSidebar 
-          isOpen={isSidebarOpen} 
-          onClose={() => setIsSidebarOpen(false)} 
+        <AppSidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
-        
+
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen">
+        <div className="flex-1 flex flex-col">
           {/* Header - Fixed position */}
-          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
+          <header className="sticky top-[4.2rem] z-40 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
             <div className="flex items-center gap-2">
               {/* Mobile Toggle Button */}
               <Button
@@ -72,7 +77,7 @@ export default function Page({ children }: PageProps) {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              
+
               {/* Desktop Toggle */}
               <Button
                 variant="ghost"
@@ -81,9 +86,13 @@ export default function Page({ children }: PageProps) {
                 className="hidden md:flex"
                 aria-label="Toggle sidebar"
               >
-                {isSidebarOpen ? <PanelRightOpen className="h-5 w-5" /> : <PanelRightClose className="h-5 w-5" />}
+                {isSidebarOpen ? (
+                  <PanelRightOpen className="h-5 w-5" />
+                ) : (
+                  <PanelRightClose className="h-5 w-5" />
+                )}
               </Button>
-              
+
               <span className="font-semibold text-lg">Examprep</span>
               <ul className="hidden md:flex items-center ml-4">
                 {segments.map((segment, index) => (
@@ -103,14 +112,16 @@ export default function Page({ children }: PageProps) {
               </Avatar>
             </div>
           </header>
-          
+
           {/* Mobile Breadcrumbs */}
           {segments.length > 0 && (
-            <div className="md:hidden border-b bg-white/80 dark:bg-gray-900/80 px-4 py-2 sticky top-16 z-30">
+            <div className="md:hidden border-b bg-white/80 dark:bg-gray-900/80 px-4 py-2 sticky top-[calc(4.2rem+64px)] z-30">
               <div className="flex items-center text-sm text-muted-foreground overflow-x-auto">
                 {segments.map((segment, index) => (
                   <React.Fragment key={index}>
-                    {index > 0 && <ChevronRight className="h-3 w-3 mx-1 flex-shrink-0" />}
+                    {index > 0 && (
+                      <ChevronRight className="h-3 w-3 mx-1 flex-shrink-0" />
+                    )}
                     <span className="whitespace-nowrap">
                       {segment.charAt(0).toUpperCase() + segment.slice(1)}
                     </span>
@@ -119,11 +130,9 @@ export default function Page({ children }: PageProps) {
               </div>
             </div>
           )}
-          
+
           {/* Main Content Area */}
-          <main className="flex-1 p-4 md:p-6 overflow-auto">
-            {children}
-          </main>
+          <main className="flex-1 p-4 md:p-6 overflow-auto">{children}</main>
         </div>
       </SidebarProvider>
     </div>

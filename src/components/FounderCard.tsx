@@ -15,7 +15,7 @@ export default function FounderCard({ img, h1, p, className }: FounderCardProps)
         alt={h1}
         width={256}
         height={256}
-        className="w-40 h-40 rounded-full object-cover mb-4"
+        className="w-40 h-50 mt-4 rounded-full object-cover mb-5"
       />
       <h2 className="text-xl font-semibold text-gray-800">{h1}</h2>
       {p.map((title, index) => (

@@ -139,7 +139,7 @@ export function Hero() {
                   <p className="text-lg sm:text-xl md:text-2xl font-semibold text-blue-700 mb-6">
                     {`Bengal's Brightest, Building Bengal's Future.`}
                   </p>
-                  <p className="text-gray-700 text-base sm:text-lg leading-relaxed">
+                  <p className="text-center text-gray-700 text-base sm:text-lg leading-relaxed">
                     {`Joddha is more than just a startup; it is a movement to
                     revolutionize education in our state. Founded by a
                     prestigious group of Doctors, Engineers, and Alums of

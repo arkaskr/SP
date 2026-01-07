@@ -130,11 +130,10 @@ export function AppSidebar({
           onClick={onClose}
         />
       )}
-
-      {/* Sidebar with increased z-index */}
+      {/* Sidebar with sticky positioning for laptop screens */}
       <aside
         className={cn(
-          "fixed md:relative top-0 left-0 z-40 h-screen md:h-auto flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out pt-36 md:pt-3 shadow-lg md:shadow-none",
+          "fixed md:sticky pt-[4rem] sm:pt-[1rem] top-[4.2rem] left-0 z-40 h-[calc(100vh-4.2rem)] flex flex-col bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out shadow-lg md:shadow-none",
           className,
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           isOpen ? "w-60" : "w-0 md:w-60"
@@ -179,9 +178,8 @@ export function AppSidebar({
         </ScrollArea>
 
         {/* User Menu Section - Only show if logged in AND sidebar is open */}
-        {/* This stays inside sidebar on desktop, but separate on mobile */}
         {session && isOpen && (
-          <div className="border-t border-gray-200 dark:border-gray-700 p-2 bg-white dark:bg-gray-900 md:block">
+          <div className="border-t border-gray-200 dark:border-gray-700 p-2 bg-white dark:bg-gray-900">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -206,12 +204,14 @@ export function AppSidebar({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl rounded-lg"
+                className="w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl rounded-lg max-h-[calc(100vh-100px)] overflow-y-auto" // Added overflow-y-auto
                 align="end"
-                side="right"
+                side="top" // Changed from "right" to "top" for laptop screens
                 sideOffset={8}
+                collisionPadding={8} // Add padding to prevent touching viewport edges
+                avoidCollisions={true} // Ensures menu stays within viewport
               >
-                <DropdownMenuLabel className="font-normal p-0 hover:bg-transparent">
+                <DropdownMenuLabel className="font-normal p-0 hover:bg-transparent sticky top-0 bg-white dark:bg-gray-900 z-10 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={image || undefined} alt={firstName} />
@@ -229,37 +229,37 @@ export function AppSidebar({
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
-                <DropdownMenuGroup>
-                  <Link href="/examprep/account">
+                <div className="py-1">
+                  <DropdownMenuGroup>
+                    <Link href="/examprep/account">
+                      <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
+                        <BadgeCheck className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                        <span className="text-gray-900 dark:text-white font-medium">
+                          Account
+                        </span>
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
-                      <BadgeCheck className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                      <CreditCard className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                       <span className="text-gray-900 dark:text-white font-medium">
-                        Account
+                        Billing
                       </span>
                     </DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
-                    <CreditCard className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                    <span className="text-gray-900 dark:text-white font-medium">
-                      Billing
-                    </span>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700 my-1" />
+                  <DropdownMenuItem
+                    className="hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer text-red-600 dark:text-red-400 transition-colors duration-200 rounded-md my-1 font-medium"
+                    onClick={() => signOut({ callbackUrl: "/examprep" })}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
                   </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
-                <DropdownMenuItem
-                  className="hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer text-red-600 dark:text-red-400 transition-colors duration-200 rounded-md my-1 font-medium"
-                  onClick={() => signOut({ callbackUrl: "/examprep" })}
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log out
-                </DropdownMenuItem>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         )}
       </aside>
-
       {/* Separate Mobile Bottom Menu - Only shows on mobile when sidebar is open */}
       {session && isOpen && (
         <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-3 shadow-lg transition-all duration-300">
@@ -287,12 +287,12 @@ export function AppSidebar({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl rounded-lg mb-2"
+              className="w-64 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-xl rounded-lg mb-2 max-h-[calc(100vh-100px)] overflow-y-auto"
               align="end"
               side="top"
               sideOffset={8}
             >
-              <DropdownMenuLabel className="font-normal p-0 hover:bg-transparent">
+              <DropdownMenuLabel className="font-normal p-0 hover:bg-transparent sticky top-0 bg-white dark:bg-gray-900 z-10 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={image || undefined} alt={firstName} />
@@ -310,31 +310,32 @@ export function AppSidebar({
                   </div>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
-              <DropdownMenuGroup>
-                <Link href="/examprep/account">
+              <div className="py-1">
+                <DropdownMenuGroup>
+                  <Link href="/examprep/account">
+                    <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
+                      <BadgeCheck className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                      <span className="text-gray-900 dark:text-white font-medium">
+                        Account
+                      </span>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
-                    <BadgeCheck className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                    <CreditCard className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                     <span className="text-gray-900 dark:text-white font-medium">
-                      Account
+                      Billing
                     </span>
                   </DropdownMenuItem>
-                </Link>
-                <DropdownMenuItem className="hover:bg-indigo-50 dark:hover:bg-indigo-950/30 focus:bg-indigo-50 dark:focus:bg-indigo-950/30 cursor-pointer transition-colors duration-200 rounded-md my-1">
-                  <CreditCard className="mr-2 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                  <span className="text-gray-900 dark:text-white font-medium">
-                    Billing
-                  </span>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700 my-1" />
+                <DropdownMenuItem
+                  className="hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer text-red-600 dark:text-red-400 transition-colors duration-200 rounded-md my-1 font-medium"
+                  onClick={() => signOut({ callbackUrl: "/examprep" })}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700" />
-              <DropdownMenuItem
-                className="hover:bg-red-50 dark:hover:bg-red-950/30 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer text-red-600 dark:text-red-400 transition-colors duration-200 rounded-md my-1 font-medium"
-                onClick={() => signOut({ callbackUrl: "/examprep" })}
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

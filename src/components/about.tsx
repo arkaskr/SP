@@ -13,7 +13,7 @@ export function About() {
         </div>
 
         {/* Content Section */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto text-center">
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
             <p className="text-gray-700 leading-relaxed md:leading-loose space-y-6">
               <span className="block text-lg sm:text-xl">

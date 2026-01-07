@@ -102,7 +102,7 @@ export default function Team() {
               img={member.img}
               h1={member.h1}
               p={member.p}
-              className="bg-white shadow-md rounded-lg cursor-pointer w-80 h-96" // Increased card size from w-64 h-80 to w-80 h-96
+              className="bg-white shadow-md rounded-lg cursor-pointer w-80 h-80" // Increased card size from w-64 h-80 to w-80 h-96
             />
           </div>
         ))}

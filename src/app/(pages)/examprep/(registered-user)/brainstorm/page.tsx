@@ -374,14 +374,14 @@ const Page: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-accent py-16 text-center mb-8 rounded-lg shadow-lg">
+      <div className="my-[-2rem] bg-accent py-16 text-center mb-8 rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold mb-4">brainstorm Tests</h1>
         <p className="text-xl">
           Master your skills with targeted brainstorm exams
         </p>
       </div>
 
-      <div className="shadow-md rounded-lg p-6 bg-card mb-8">
+      <div className="shadow-md rounded-lg pt-4 px-4 bg-card mt-[-1.5rem] mb-2">
         <div className="space-y-4">
           <div className="flex flex-wrap gap-4 justify-between items-center">
             <div className="flex items-center w-full md:w-auto max-w-md">
