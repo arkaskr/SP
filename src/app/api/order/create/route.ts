@@ -8,13 +8,10 @@ const instance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
-export async function GET(req: Request) {
-  try{
-    const { searchParams } = new URL(req.url);
-    const courseId = searchParams.get("courseId");
-    const amount = Number(searchParams.get("amount"));
+export async function POST(req: Request) {
+  try {
+    const { courseId, couponCode } = await req.json();
 
-    // Validate required parameters
     if (!courseId) {
       return NextResponse.json(
         { error: true, message: "Course ID is required" },
@@ -22,17 +19,10 @@ export async function GET(req: Request) {
       );
     }
 
-    if (isNaN(amount)) {
-      return NextResponse.json(
-        { error: true, message: "Invalid amount" },
-        { status: 400 }
-      );
-    }
-
-    // Fetch course from database to validate its price
+    // Fetch course
     const course = await db.course.findUnique({
       where: { id: courseId },
-      select: { price: true, title: true }
+      select: { id: true, price: true, title: true, discount: true },
     });
 
     if (!course) {
@@ -42,48 +32,99 @@ export async function GET(req: Request) {
       );
     }
 
-    // Validate that provided amount matches course price
-    if (course.price !== amount) {
-      return NextResponse.json(
-        { 
-          error: true, 
-          message: `Amount mismatch. Course price is ${course.price}, but provided amount is ${amount}` 
-        },
-        { status: 400 }
-      );
+    let discount = course.discount || 0;
+    let appliedCoupon: { code: string; fixedDiscount: number } | null = null;
+
+    // Coupon validation
+    if (couponCode) {
+      const coupon = await db.coupon.findUnique({
+        where: { code: couponCode.toUpperCase() },
+      });
+
+      if (!coupon) {
+        return NextResponse.json(
+          { error: true, message: "Invalid coupon code" },
+          { status: 400 }
+        );
+      }
+
+      if (!coupon.isActive) {
+        return NextResponse.json(
+          { error: true, message: "Coupon is inactive" },
+          { status: 400 }
+        );
+      }
+
+      if (coupon.validTill && coupon.validTill < new Date()) {
+        return NextResponse.json(
+          { error: true, message: "Coupon has expired" },
+          { status: 400 }
+        );
+      }
+
+      if (coupon.minOrderAmount && course.price < coupon.minOrderAmount) {
+        return NextResponse.json(
+          {
+            error: true,
+            message: `Used Coupon required Minimum order amount of ₹${coupon.minOrderAmount}`,
+          },
+          { status: 400 }
+        );
+      }
+
+      if (coupon.usageLimit !== null && coupon.usedCount >= coupon.usageLimit) {
+        return NextResponse.json(
+          { error: true, message: "Coupon usage limit exceeded" },
+          { status: 400 }
+        );
+      }
+
+      discount = coupon.fixedDiscount;
+      appliedCoupon = { code: coupon.code, fixedDiscount: coupon.fixedDiscount };
     }
 
+    const finalAmount = Math.max(course.price - discount, 0);
 
-    // FREE COURSE
-    if (amount === 0) {
-
-       const order ={
-        course,
-      amount: 0,
-      currency: "INR",
-      receipt: uuid(),
-      free:true,
-    };
-
+    // Free course
+    if (finalAmount === 0) {
       return NextResponse.json({
-        order
+        order:{
+        free: true,
+        course,
+        discount,
+        finalAmount,
+        coupon: appliedCoupon?.code ?? null,
+      }
       });
     }
 
-    // PAID COURSE
-    const order = await instance.orders.create({
-      amount: amount * 100,
-      currency: "INR",
-      receipt: uuid(),
-    });
+    // Razorpay order creation with timeout handling
+    let razorpayOrder;
+    try {
+      razorpayOrder = await instance.orders.create({
+        amount: finalAmount * 100, // Amount in paise
+        currency: "INR",
+        receipt: uuid(),
+      });
+    } catch (err) {
+      console.error("Razorpay order creation failed:", err);
+      return NextResponse.json(
+        { error: true, message: "Payment gateway error. Try again." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       free: false,
-      order,
+      order: razorpayOrder,
+      course,
+      discount,
+      finalAmount,
+      coupon: appliedCoupon?.code ?? null,
     });
 
   } catch (err) {
-    console.error("Order create error:", err);
+    console.error("Server error creating order:", err);
     return NextResponse.json(
       { error: true, message: "Server error" },
       { status: 500 }

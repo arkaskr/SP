@@ -128,7 +128,7 @@ export default function CourseList() {
                 </div>
               </div>
             </div>
-            {userCourses.includes(course.id) ? (
+            {!userCourses.includes(course.id) ? (
               <Button className="mt-4 w-full" disabled>
                 Already Enrolled
               </Button>

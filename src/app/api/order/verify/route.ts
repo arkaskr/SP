@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { db } from "@/lib/db"; // or your DB method
 
 export async function POST(req: Request) {
-  const { razorpayOrderId, razorpaySignature, razorpayPaymentId, email, amount, courseId } = await req.json();
+  const { razorpayOrderId, razorpaySignature, razorpayPaymentId, email, amount, courseId,couponCode } = await req.json();
 
   if (!email) return NextResponse.json({ message: "email is required", error: true }, { status: 400 });
   if (amount === undefined) return NextResponse.json({ message: "amount is required", error: true }, { status: 400 });
@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     });
 
    if(enroll){
+
      return NextResponse.json({ message: "Free course enrolled successfully",enroll, error: false }, { status: 200 });
    }
   }
@@ -57,6 +58,15 @@ export async function POST(req: Request) {
       paymentId: razorpayPaymentId || null,
     },
   });
+
+        if (couponCode) {
+  await db.coupon.update({
+    where: { code: couponCode },
+    data: {
+      usedCount: { increment: 1 }, // increment usedCount by 1
+    },
+  });
+}
 
   return NextResponse.json({ message: "Payment successful, enrolled!", error: false }, { status: 200 });
 }

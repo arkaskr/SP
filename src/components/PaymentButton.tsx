@@ -9,26 +9,45 @@ import Loading from "@/app/(pages)/checkout/loading";
 interface PaymentButtonInterface {
   amount: number;
   courseId: string;
+  couponCode : string;
 }
 
-const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
-  const { data: userData } = useSession();
+const PaymentButton = ({ amount, courseId, couponCode }: PaymentButtonInterface) => {
+  const {data:session } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [resMsg, setResMsg] = useState('')
 
   const makePayment = async () => {
     setIsLoading(true);
 
     try {
-      const data = await fetch(
-        `/api/order/create?amount=${amount}&courseId=${courseId}`
-      );
+        const data = await fetch("/api/order/create", {
+    method: "POST", // must be POST
+    headers: {
+      "Content-Type": "application/json", // tell Next.js API to parse JSON
+    },
+    body: JSON.stringify({
+      courseId,       // your course ID
+      amount,         // optional if your API calculates price
+      couponCode,     // optional if user entered a coupon
+    }),
+  });
+
+ 
+
       
       const response = await data.json();
+
+       if(response.error)
+       {
+    setResMsg(response.message)
+    return
+  }
       console.log("co res",response)
       // alert(response.data.order.free)
       
-      // ✅ Check if it's a free course
+      // Check if it's a free course
       if (response.order.free === true) {
         // For free courses, directly call the verify endpoint to create enrollment
         const verifyResponse = await fetch("/api/order/verify", {
@@ -40,25 +59,30 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
             razorpayPaymentId: null,
             razorpayOrderId: null,
             razorpaySignature: null,
-            email: userData?.user?.email,
+            email: session?.user?.email,
             courseId: courseId,
             amount: 0, // Free course
+            couponCode
           }),
         });
+
+
+       
         
         const verifyResult = await verifyResponse.json();
         
         if (verifyResult?.error === false) {
           router.push("/checkout/success");
         } else {
-          alert(verifyResult?.message || "Failed to enroll in free course");
+          setResMsg(verifyResult?.message || "Failed to enroll in free course");
+          return
         }
         
         setIsLoading(false);
         return;
       }
       
-      // ✅ For paid courses, proceed with Razorpay
+      // For paid courses, proceed with Razorpay
       const order = response.order;
       
       // Check if order exists
@@ -68,7 +92,7 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
       
       const options: RazorpayOptions = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-        name: userData?.user?.name || userData?.user?.email || "Customer",
+        name: session?.user?.name || session?.user?.email || "Customer",
         description: `Payment for ${order.course?.title || "Course"}`,
         currency: order.currency || "INR",
         amount: order.amount * 100, // Convert to paise
@@ -93,9 +117,10 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpayOrderId: response.razorpay_order_id,
                 razorpaySignature: response.razorpay_signature,
-                email: userData?.user?.email,
+                email: session?.user?.email,
                 courseId: courseId,
                 amount: order.amount * 100, // Send in paise
+                couponCode
               }),
             });
             
@@ -103,19 +128,20 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
             if (res?.error === false) {
               router.push("/checkout/success");
             } else {
-              alert(res?.message || "Payment verification failed");
+              setResMsg(res?.message || "Payment verification failed");
               setIsLoading(false);
+              return
             }
           } catch (error) {
             console.error("Verification error:", error);
-            alert("Payment verification failed");
+            setResMsg("Payment verification failed");
             setIsLoading(false);
           }
         },
         prefill: {
-          email: userData?.user?.email || "",
-          contact: userData?.user?.ph_no?.toString() || "",
-          name: userData?.user?.name || "",
+          email: session?.user?.email || "",
+          contact: session?.user?.ph_no?.toString() || "",
+          name: session?.user?.name || "",
         },
         theme: {
           color: "#3B82F6",
@@ -155,7 +181,7 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
         
         paymentObject.on("payment.failed", function (response: any) {
           console.error("Payment failed:", response.error);
-          alert("Payment failed. Please try again. Reason: " + (response.error?.description || "Unknown error"));
+          setResMsg("Payment failed. Please try again. Reason: " + (response.error?.description || "Unknown error"));
           setIsLoading(false);
         });
         
@@ -166,22 +192,24 @@ const PaymentButton = ({ amount, courseId }: PaymentButtonInterface) => {
         paymentObject.open();
       } else {
         console.error("Razorpay SDK not loaded");
-        alert("Payment gateway not available. Please refresh the page.");
+        setResMsg("Payment gateway not available. Please refresh the page.");
         setIsLoading(false);
+        return
       }
       
     } catch (error) {
       console.error("Payment initiation error:", error);
-      alert("Failed to initiate payment. Please try again.");
+      setResMsg("Failed to initiate payment. Please try again.");
       setIsLoading(false);
     }
   };
 
   return (
     <Suspense fallback={<Loading />}>
-      <div className="">
+      <div className="w-full">
+        {resMsg && <div className=" font-semibold  border border-amber-700 flex p-2 bg-amber-500/10 m-1 mb-2 text-amber-700  rounded-md">{resMsg}</div> }
         <Button
-          className={cn(buttonVariants({ size: "lg" }))}
+          className="w-full bg-sky-700/80"
           disabled={isLoading}
           onClick={makePayment}
         >
