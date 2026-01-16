@@ -92,7 +92,7 @@ export default function CourseList() {
             <Image
               src={course.thumbnailUrl}
               alt={course.title}
-              className="w-full h-48 object-cover rounded-t-lg"
+              className="w-full h-48 object-contain rounded-t-lg"
               height={400}
               width={600}
             />
@@ -128,7 +128,7 @@ export default function CourseList() {
                 </div>
               </div>
             </div>
-            {!userCourses.includes(course.id) ? (
+            {userCourses.includes(course.id) ? (
               <Button className="mt-4 w-full" disabled>
                 Already Enrolled
               </Button>

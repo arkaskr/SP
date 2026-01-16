@@ -234,7 +234,7 @@ export default function CourseCarousel({
   return (
     <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
 
-        <h2 className=" w-full text-center pb-8 ml-4 text-white p-3 text-md">Explore Our Courses</h2>
+        <h2 className=" w-full text-center pb-6 ml-4 text-white p-3 text-md">Explore Our Courses</h2>
       {/* Carousel Container */}
       <div
         ref={carouselRef}

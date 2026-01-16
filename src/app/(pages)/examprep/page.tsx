@@ -26,10 +26,11 @@ interface ExamCategories {
 }
 
 const ExamPrepPage = () => {
-  const { data: session } = useSession();
+  const { data: session,status } = useSession();
   const [hasSubscription, setHasSubscription] = useState(false);
   const [loading, setLoading] = useState(false);
   const [exams, setExams] = useState<ExamCategories[]>([]);
+  
 
   const isLoggedIn = !!session?.user;
 
@@ -51,12 +52,15 @@ const ExamPrepPage = () => {
   }, []);
 
   // Subscription check
-  React.useEffect(() => {
-    setTimeout(() => {
-      setHasSubscription(true);
-      setLoading(false);
-    }, 1000);
-  }, []);
+ useEffect(() => {
+  if (status === "loading") return;
+
+  const isSubscribed =
+    (session?.user?.enrollments?.length ?? 0) > 0;
+
+  setHasSubscription(isSubscribed);
+  setLoading(false);
+}, [status, session]);
 
   // If NOT logged in, show DemoPage directly
   if (!isLoggedIn) {
@@ -93,11 +97,11 @@ const ExamPrepPage = () => {
           <Switch
             id="subscription"
             checked={hasSubscription}
-            onCheckedChange={(checked) => setHasSubscription(checked)}
+            // onCheckedChange={(checked) => setHasSubscription(checked)}
             className="bg-white/20 z-11"
           />
           <Label htmlFor="subscription">is Subscribed?</Label>
-          {/* {session &&
+          {session &&
             session.user &&
             session.user.role.toUpperCase() === "ADMIN" && (
               <div className="ml-auto">
@@ -110,10 +114,10 @@ const ExamPrepPage = () => {
                   </Button>
                 </Link>
               </div>
-            )} */}
+            )}
           {session &&
             session.user &&
-            session.user.role.toUpperCase() === "SUPERADMIN" ||  session.user.role.toUpperCase() === "ADMIN"  && (
+            session.user.role.toUpperCase() === "SUPERADMIN" && (
               <div className="ml-auto">
                 <Link href="/superadmin">
                   <Button

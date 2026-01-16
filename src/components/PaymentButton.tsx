@@ -13,12 +13,19 @@ interface PaymentButtonInterface {
 }
 
 const PaymentButton = ({ amount, courseId, couponCode }: PaymentButtonInterface) => {
-  const {data:session } = useSession();
+  const {data:session,status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [resMsg, setResMsg] = useState('')
 
   const makePayment = async () => {
+
+    if (!session?.user?.id) {
+  const callbackUrl = `/checkout?courseId=${courseId}`;
+  router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
+  return;
+}
+
     setIsLoading(true);
 
     try {

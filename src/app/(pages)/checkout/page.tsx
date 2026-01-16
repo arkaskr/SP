@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { CircleCheck, Loader2 } from "lucide-react";
 import PaymentButton from "@/components/PaymentButton";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ export default function CheckoutPage() {
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
+
 
 
 const [couponCode, setCouponCode] = useState("");
