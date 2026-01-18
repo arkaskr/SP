@@ -117,7 +117,7 @@ const ExamPrepPage = () => {
             )}
           {session &&
             session.user &&
-            session.user.role.toUpperCase() === "SUPERADMIN" || session.user.role.toUpperCase() === "ADMIN" &&(
+            session.user.role.toUpperCase() === "SUPERADMIN" && (
               <div className="ml-auto">
                 <Link href="/superadmin">
                   <Button

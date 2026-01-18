@@ -96,7 +96,7 @@ interface NewCourse {
   description: string;
   price: number;
   discount: number;
-  level: "BASIC" | "STANDARD" | "PREMIUM";
+  level: "BASIC" | "STANDARD" | "PREMIUM" | "COMING_SOON";
   examCategoryIds: string[];
   examIds: string[];
 }
@@ -603,6 +603,7 @@ export default function CourseManagement() {
                   <SelectItem value="BASIC">BASIC</SelectItem>
                   <SelectItem value="STANDARD">STANDARD</SelectItem>
                   <SelectItem value="PREMIUM">PREMIUM</SelectItem>
+                  <SelectItem value="COMING_SOON">Coming Soon</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -21,6 +21,7 @@ import {
   Lock,
   FileDown,
   GraduationCap,
+  Check,
 } from "lucide-react";
 import Image from "next/image";
 import CourseCarousel from "@/components/CourseCarousel";
@@ -193,22 +194,24 @@ const DemoPage = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
 
-
-      
-      
       <div className="bg-white border-b">
-        
         <div className="container mx-auto px-4 py-8">
-          
           <div className="text-center mx-auto">
-     
-            
-            <h1 className="text-xl md:text-2xl mt-16 font-bold text-gray-900 mb-4">
-              Explore Our Courses
-            </h1>
+            <div className="text-center mx-auto mt-16 mb-10">
+              <h1 className="relative inline-block text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">
+                Explore Our Courses
+                <span className="absolute left-1/2 -bottom-3 w-16 h-[3px] bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full -translate-x-1/2"></span>
+              </h1>
+
+              <p className="mt-6 text-sm md:text-base text-gray-600 max-w-xl mx-auto">
+                Carefully designed mock papers and exam-oriented courses to
+                boost your preparation
+              </p>
+            </div>
+
             <CourseCarousel />
-             
-               {/* <h1 className="text-4xl md:text-5xl mt-16 font-bold text-gray-900 mb-4">
+
+            {/* <h1 className="text-4xl md:text-5xl mt-16 font-bold text-gray-900 mb-4">
               Start Your Exam Preparation
             </h1>
             <p className="text-xl text-gray-600 mb-8">
@@ -235,7 +238,6 @@ const DemoPage = () => {
                 Already have an account? Login
               </Button>
             </div> */}
-
           </div>
         </div>
       </div>
@@ -243,12 +245,16 @@ const DemoPage = () => {
       {/* Features Grid */}
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <h2 className="relative inline-block text-3xl font-extrabold text-gray-900 tracking-tight">
             Explore Our Free Features
+            <span className="absolute left-1/2 -bottom-3 w-20 h-[3px] bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full -translate-x-1/2"></span>
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Get started with these essential preparation tools. Some interactive
-            features require login.
+
+          <p className="mt-6 text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Get started with these essential preparation tools.
+            <span className="block text-sm mt-1 text-gray-500">
+              Some interactive features require login.
+            </span>
           </p>
         </div>
 
@@ -331,6 +337,112 @@ const DemoPage = () => {
               </Card>
             );
           })}
+        </div>
+      </div>
+
+      {/* Pricing & Membership Tiers */}
+      <div className="bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">
+            Pricing and Membership Tiers
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {/* Pricing Table */}
+            <div className="lg:col-span-3 overflow-x-auto">
+              <table className="w-full border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                <thead>
+                  <tr className="bg-gray-50 text-sm text-gray-700">
+                    <th className="text-left px-6 py-4 border-r">
+                      Exam Course
+                    </th>
+
+                    <th className="px-6 py-4 border-r text-center">
+                      Price
+                      <div className="font-bold text-xl mt-1">₹499</div>
+                    </th>
+
+                    {/* Recommended */}
+                    <th className="px-6 py-4 border-r text-center relative bg-blue-50">
+                      <div className="absolute top-0 left-0 right-0 bg-blue-600 text-white text-xs font-semibold py-1">
+                        RECOMMENDED
+                      </div>
+                      <div className="pt-6">
+                        Premium
+                        <div className="font-bold text-xl mt-1">₹1499</div>
+                      </div>
+                    </th>
+
+                    <th className="px-6 py-4 text-center">
+                      Premium
+                      <div className="font-bold text-xl mt-1">₹1599</div>
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody className="text-sm text-gray-700">
+                  {[
+                    ["WBJEE 2025", true, true, true],
+                    ["Premium Questions", false, true, true],
+                    [
+                      "Offline Mock test facility in Kolkata",
+                      false,
+                      true,
+                      true,
+                    ],
+                    ["Subject’s Chapter-wise practice", false, true, true],
+                    ["Subject’s Premiere practice", false, true, true],
+                  ].map(([label, b, p, pp], i) => (
+                    <tr
+                      key={i}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
+                      <td className="px-6 py-4 border-r font-medium">
+                        {label}
+                      </td>
+
+                      <td className="text-center border-r">
+                        {b ? <Check className="mx-auto text-green-600" /> : "—"}
+                      </td>
+
+                      <td className="text-center border-r bg-blue-50 shadow-inner">
+                        {p ? <Check className="mx-auto text-blue-600" /> : "—"}
+                      </td>
+
+                      <td className="text-center">
+                        {pp ? (
+                          <Check className="mx-auto text-green-600" />
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Right Info Card */}
+            <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 shadow-sm">
+              <div className="mb-6">
+                <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                  🖥 Offline Mock test facility in Kolkata
+                </h4>
+                <p className="text-sm text-gray-700">
+                  Mock test + facility in Kolkata
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                  ✍ Subject’s Chapter-wise practice
+                </h4>
+                <p className="text-sm text-gray-700">
+                  Mock test + reasoning & numerical practice
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
