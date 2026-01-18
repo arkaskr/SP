@@ -27,7 +27,7 @@ interface ExamCategories {
 
 const ExamPrepPage = () => {
   const { data: session,status } = useSession();
-  const [hasSubscription, setHasSubscription] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(true);
   const [loading, setLoading] = useState(false);
   const [exams, setExams] = useState<ExamCategories[]>([]);
   
@@ -52,15 +52,15 @@ const ExamPrepPage = () => {
   }, []);
 
   // Subscription check
- useEffect(() => {
-  if (status === "loading") return;
+//  useEffect(() => {
+//   if (status === "loading") return;
 
-  const isSubscribed =
-    (session?.user?.enrollments?.length ?? 0) > 0;
+//   const isSubscribed =
+//     (session?.user?.enrollments?.length ?? 0) > 0;
 
-  setHasSubscription(isSubscribed);
-  setLoading(false);
-}, [status, session]);
+//   setHasSubscription(isSubscribed);
+//   setLoading(false);
+// }, [status, session]);
 
   // If NOT logged in, show DemoPage directly
   if (!isLoggedIn) {
@@ -117,7 +117,7 @@ const ExamPrepPage = () => {
             )}
           {session &&
             session.user &&
-            session.user.role.toUpperCase() === "SUPERADMIN" && (
+            session.user.role.toUpperCase() === "SUPERADMIN" || session.user.role.toUpperCase() === "ADMIN" &&(
               <div className="ml-auto">
                 <Link href="/superadmin">
                   <Button

@@ -15,6 +15,14 @@ interface CourseCarouselProps {
   showControls?: boolean;
 }
 
+// Define gradient presets based on your reference image
+const gradientPresets = [
+  "linear-gradient(135deg, #262038 50%, #262038 100%, #2c5364 100%)",
+  "linear-gradient(135deg, #141E30 0%, #243B55 100%)",
+  "linear-gradient(135deg, #1a2980 0%, #26d0ce 100%)",
+];
+
+
 export default function CourseCarousel({
   courses: propCourses,
   autoScroll = true,
@@ -28,24 +36,29 @@ export default function CourseCarousel({
   const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(autoScroll);
-  const [itemsPerView, setItemsPerView] = useState(1); // Start with 1 for mobile
+  const [itemsPerView, setItemsPerView] = useState(1);
   const carouselRef = useRef<HTMLDivElement>(null);
   const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Get gradient for a course based on index
+  const getCourseGradient = (index: number) => {
+    return gradientPresets[index % gradientPresets.length];
+  };
 
   // Responsive items per view
   useEffect(() => {
     const updateItemsPerView = () => {
       const width = window.innerWidth;
-      if (width < 640) { // Mobile
+      if (width < 640) {
         setItemsPerView(1);
-      } else if (width < 1024) { // Tablet
+      } else if (width < 1024) {
         setItemsPerView(2);
-      } else { // Desktop
+      } else {
         setItemsPerView(3);
       }
     };
 
-    updateItemsPerView(); // Initial call
+    updateItemsPerView();
     window.addEventListener("resize", updateItemsPerView);
     
     return () => {
@@ -109,7 +122,7 @@ export default function CourseCarousel({
     if (canGoNext) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      setCurrentIndex(0); // Loop back to start
+      setCurrentIndex(0);
     }
   }, [canGoNext]);
 
@@ -117,7 +130,7 @@ export default function CourseCarousel({
     if (canGoPrev) {
       setCurrentIndex((prev) => prev - 1);
     } else {
-      setCurrentIndex(totalSlides - 1); // Loop to end
+      setCurrentIndex(totalSlides - 1);
     }
   }, [canGoPrev, totalSlides]);
 
@@ -232,9 +245,7 @@ export default function CourseCarousel({
   }
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-
-        <h2 className=" w-full text-center pb-6 ml-4 text-white p-3 text-md">Explore Our Courses</h2>
+    <div className="relative w-full max-w-7xl mx-auto">
       {/* Carousel Container */}
       <div
         ref={carouselRef}
@@ -244,7 +255,6 @@ export default function CourseCarousel({
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-
       >
         {/* Sliding container */}
         <div
@@ -253,7 +263,7 @@ export default function CourseCarousel({
             transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
           }}
         >
-          {courses.map((course) => (
+          {courses.map((course, index) => (
             <div
               key={course.id}
               className="w-full flex-shrink-0 px-3"
@@ -262,83 +272,90 @@ export default function CourseCarousel({
                 minWidth: `${100 / itemsPerView}%` 
               }}
             >
-              <div className="border rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col bg-white">
-                {/* Course Image */}
-                <div className="relative w-full h-48 md:h-56 mb-4 overflow-hidden rounded-lg">
-                  <Image
-                    src={course.thumbnailUrl}
-                    alt={course.title}
-                    fill
-                    className="object-contain hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    priority={courses.indexOf(course) < 3}
-                  />
-                  <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                    {course.level}
-                  </div>
-                </div>
+            <div className="rounded-2xl bg-white hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+ transition-all duration-300 h-full flex flex-col relative overflow-hidden border border-gray-200">
 
-                {/* Course Content */}
-                <div className="flex-grow">
-                  <h3 className="text-lg md:text-xl font-bold mb-2 line-clamp-1">
-                    {course.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2 text-sm md:text-base">
-                    {course.subtitle}
-                  </p>
+             
+                <div className="relative z-10 flex flex-col h-full" >
+               
+               <div
+  className="relative px-6 py-12 text-white"
+  style={{ background: getCourseGradient(index) }}
+>
+  {/* subtle glow overlay */}
+  <div className="absolute inset-0 bg-white/5 backdrop-blur-[1px]" />
 
-                  {/* Price */}
-                  <div className="flex justify-between items-center mb-3">
-                    <div>
-                      <span className="line-through text-gray-400 mr-2 text-sm md:text-base">
-                        ₹{course.price}
-                      </span>
-                      <span className="font-bold text-green-600 text-lg md:text-xl">
-                        ₹{course.price - course.discount}
-                      </span>
+  {/* Premium badge */}
+  <div className="absolute rotate-45 w-40 top-5 px-4 -right-12 bg-rose-500 text-white text-xs font-bold py-1 rounded-full shadow">
+   {course.price > 0 ? course.level : "Coming Soon"}
+  </div>
+
+  <div className="relative z-10">
+    <h3 className="text-2xl font-extrabold tracking-wide mb-1">
+      {course.title}
+    </h3>
+
+    <p className="text-sm text-white/80 font-medium">
+      {course.subtitle || "Mock Paper"}
+    </p>
+  </div>
+</div>
+
+
+               
+
+                  {/* Price Section - Styled like reference */}
+              {course?.price > 0 && (  <div className="mt-auto px-6 pb-6 pt-4 text-black">
+
+                    <div className="flex justify-between items-center mb-4">
+                      <div>
+                        {/* <div className="text-sm mb-1">Starting at</div> */}
+                        <div className="flex items-baseline gap-2">
+                          <span className="line-through  text-md text-gray-500">
+                            ₹{course.price}
+                          </span>
+                          <span className="font-bold text-2xl">
+                            ₹{course.price - course.discount}
+                          </span>
+                        </div>
+                      </div>
+                      {/* <div className="backdrop-blur-sm px-3 py-1 rounded-full text-sm">
+                        Save ₹{course.discount}
+                      </div> */}
                     </div>
-                    <span className="text-xs md:text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
-                      Save ₹{course.discount}
-                    </span>
-                  </div>
 
-                  {/* Exam Categories */}
-                  <div className="mb-4">
-                    <h4 className="font-semibold mb-2 text-sm md:text-base">Exam Categories:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {course.examCategories.slice(0, 3).map((category, index) => (
-                        <span
-                          key={index}
-                          className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
-                        >
-                          {category.name}
-                        </span>
-                      ))}
-                      {course.examCategories.length > 3 && (
-                        <span className="text-xs text-gray-500 px-1">
-                          +{course.examCategories.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                    {/* Enroll Button */}
+                    {userCourses.includes(course.id) ? (
+                      <Link href={`/courses/${course.id}`} passHref>
+                       <Button
+  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white
+  font-semibold py-6 rounded-xl text-base"
+>
+  Continue Learning
+</Button>
+
+                      </Link>
+                    ) : (
+                      <Link href={`/checkout?courseId=${course.id}`} passHref>
+                      <Button
+  className="w-full bg-sky-600 hover:bg-sky-700 text-white
+  font-semibold py-6 rounded-md text-base transition-all duration-300"
+>
+  View Course
+</Button>
+
+                      </Link>
+                    )}
+                    
+                  
+
+                  </div>)}
+
+
                 </div>
 
-                {/* Enroll Button */}
-                <div className="mt-auto pt-4 border-t">
-                  {userCourses.includes(course.id) ? (
-                    <Link href={`/courses/${course.id}`} passHref>
-                      <Button className="w-full bg-green-600 hover:bg-green-700">
-                        Continue Learning
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link href={`/checkout?courseId=${course.id}`} passHref>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        Enroll Now
-                      </Button>
-                    </Link>
-                  )}
-                </div>
+            
+                
               </div>
             </div>
           ))}
@@ -346,45 +363,45 @@ export default function CourseCarousel({
 
         {/* Mobile touch indicators */}
         <div className="flex md:hidden justify-center mt-6">
-          <div className="text-xs text-white flex items-center gap-2">
+          <div className="text-xs text-gray-600 flex items-center gap-2">
             <span>← Swipe →</span>
           </div>
         </div>
       </div>
 
-      
+      {/* Navigation Buttons */}
       {showControls && totalSlides > 1 && (
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute -left-1 md:left-4 top-1/3 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-xl hover:shadow-2xl transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Previous slide"
             disabled={!canGoPrev && !autoScroll}
           >
-            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            <ChevronLeft className="w-6 h-6 md:w-7 md:h-7" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="absolute -right-2 md:right-4 top-1/3 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-xl hover:shadow-2xl transition-all z-10 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Next slide"
             disabled={!canGoNext && !autoScroll}
           >
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+            <ChevronRight className="w-6 h-6 md:w-7 md:h-7" />
           </button>
         </>
       )}
 
       {/* Dots Indicator */}
       {totalSlides > 1 && (
-        <div className="flex justify-center mt-6 md:mt-8 space-x-2 my-4">
+        <div className="flex justify-center mt-8 space-x-3 my-4">
           {Array.from({ length: totalSlides }).map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 md:w-4 md:h-4 rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? "bg-blue-600 w-6 md:w-8"
+                  ? "bg-gradient-to-r from-blue-600 to-purple-600 w-8 md:w-10"
                   : "bg-gray-300 hover:bg-gray-400"
               }`}
               aria-label={`Go to slide ${index + 1}`}
@@ -392,40 +409,6 @@ export default function CourseCarousel({
           ))}
         </div>
       )}
-
-      {/* Auto-scroll toggle */}
-      {/* {autoScroll && totalSlides > 1 && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-all"
-            aria-label={isAutoScrolling ? "Pause auto-scroll" : "Resume auto-scroll"}
-          >
-            {isAutoScrolling ? (
-              <>
-                <Pause className="w-4 h-4" />
-                <span className="hidden sm:inline">Pause Auto-scroll</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-4 h-4" />
-                <span className="hidden sm:inline">Resume Auto-scroll</span>
-              </>
-            )}
-          </button>
-        </div>
-      )}
-       */}
-
-      {/* Course counter */}
-      {/* <div className="text-center mt-4 text-sm text-gray-500">
-        <span className="font-semibold text-blue-600">{currentIndex + 1}</span>
-        <span className="mx-2">/</span>
-        <span>{totalSlides}</span>
-        <span className="ml-2">({courses.length} courses)</span>
-      </div> */}
-
-
     </div>
   );
 }

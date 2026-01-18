@@ -456,7 +456,7 @@ setAccessType(data?.accessType);
 
   return (
     <StudyTracker>
-       <ExamGuard courseId={courseId} accessType={accessType} />
+       {/* <ExamGuard courseId={courseId} accessType={accessType} /> */}
     <div className="min-h-screen">
       {session && currentStep !== "submitted" && (
         <QuizHeader

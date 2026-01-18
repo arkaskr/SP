@@ -34,12 +34,6 @@ export function Hero() {
       {/* Hero section */}
       <section className="w-full bg-[#0055ff] py-20 lg:py-24 relative z-0">
 
-         <CourseCarousel
-            autoScroll={true}
-            autoScrollInterval={4000}
-            showControls={true}
-           
-          />
 
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center px-4 sm:px-6 md:px-8 gap-8 lg:gap-16">
           {/* LEFT CONTENT */}

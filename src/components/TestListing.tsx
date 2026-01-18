@@ -134,7 +134,7 @@ router.push(`/exam?examId=${test.id}&type=${type}&courseId=${test.courseId}`); r
 
     // Not subscribed → subscribe page
     if (!isSubscribed) {
-      router.push(`/subscribe?courseId=${test.courseId}`);
+      router.push(`/checkout?courseId=${test.courseId}`);
       return;
     }
 
